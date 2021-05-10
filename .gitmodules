@@ -1,0 +1,9 @@
+[submodule "sbgck-opencv"]
+	path = sbgck-opencv
+	url = https://github.com/egandro/sbgck-opencv
+[submodule "libs"]
+	path = libs
+	url = https://github.com/egandro/libs
+[submodule "soloud"]
+	path = soloud
+	url = https://github.com/egandro/soloud
