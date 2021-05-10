@@ -2,6 +2,7 @@
 	path = sbgck-opencv
 	url = https://github.com/egandro/sbgck-opencv
 [submodule "libs"]
+	branch = main
 	path = libs
 	url = https://github.com/egandro/libs
 [submodule "soloud"]
