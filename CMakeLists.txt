@@ -77,7 +77,7 @@ install(TARGETS sbgck_core
         INCLUDES DESTINATION include
         ARCHIVE DESTINATION lib)
 
-install(FILES "include/log.hpp" "include/version.hpp" DESTINATION include/sbgck_opencv)
+install(FILES "include/dummy.hpp" DESTINATION include/sbgck_core)
 
 ########################################################################
 # Tests - idea https://bastian.rieck.me/blog/posts/2017/simple_unit_tests/
