@@ -27,6 +27,8 @@ endif()
 
 if(NOT DEFINED ${EXTERNAL_INSTALL_LOCATION})
     set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
+else
+    message("using EXTERNAL_INSTALL_LOCATION: ${EXTERNAL_INSTALL_LOCATION}")
 endif()
 
 include_directories(${EXTERNAL_INSTALL_LOCATION}/include)
