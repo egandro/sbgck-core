@@ -25,7 +25,10 @@ if(UNIX AND NOT APPLE)
     SET ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC" )
 endif()
 
-set(EXTERNAL_INSTALL_LOCATION ${CMAKE_CURRENT_BINARY_DIR}/external)
+if(NOT DEFINED ${EXTERNAL_INSTALL_LOCATION})
+    set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
+endif()
+
 include_directories(${EXTERNAL_INSTALL_LOCATION}/include)
 link_directories(${EXTERNAL_INSTALL_LOCATION}/lib)
 
@@ -49,7 +52,7 @@ ExternalProject_Add(soloud_lib
 
 ExternalProject_Add(sbgck_opencv_lib
     SOURCE_DIR ${CMAKE_SOURCE_DIR}/sbgck-opencv
-    CMAKE_ARGS -DBUILD_TESTING=OFF -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_LOCATION}
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_LOCATION}
 )
 
 ExternalProject_Add(libs_lib
