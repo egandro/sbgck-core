@@ -1,0 +1,1 @@
+Taken from here: https://sol.gfxile.net/soloud/soloud_20200207.zip (official SoLoud examples)

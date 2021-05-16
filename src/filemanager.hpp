@@ -35,6 +35,10 @@ namespace SBGCK
 
         void setData(int size, void *content)
         {
+            if (contentPtr != NULL)
+            {
+                free(contentPtr);
+            }
             contentSize = size;
             contentPtr = content;
         }
