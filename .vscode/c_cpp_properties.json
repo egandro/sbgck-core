@@ -1,30 +1,12 @@
 {
     "configurations": [
         {
-            "name": "Linux",
-            "includePath": [
-                "${default}",
-                "${workspaceFolder}/src",
-                "${workspaceFolder}/include",
-                "${workspaceFolder}/external/include",
-                "/usr/local/include/opencv4"
-            ],
-            "defines": [
-                "NODE_MODULE_NAME"
-            ],
-            "compilerPath": "/usr/bin/gcc",
-            "cStandard": "gnu17",
-            "cppStandard": "gnu++14",
-            "intelliSenseMode": "linux-gcc-arm",
-            "configurationProvider": "ms-vscode.cmake-tools"
-        },
-        {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}\\src",
-                "${workspaceFolder}\\include",
-                "${workspaceFolder}\\build\\external\\include",
-                "${OPENCV_DIR}\\include"
+                "${workspaceFolder}/src",
+                "${workspaceFolder}/include",
+                "${workspaceFolder}/build/external/include",
+                "${OPENCV_DIR}/include"
             ],
             "defines": [
                 "_DEBUG",
@@ -36,6 +18,24 @@
             "cStandard": "c17",
             "cppStandard": "c++17",
             "intelliSenseMode": "windows-msvc-x64"
+        },
+        {
+            "name": "Linux",
+            "includePath": [
+                "${default}",
+                "${workspaceFolder}/src",
+                "${workspaceFolder}/include",
+                "${workspaceFolder}/build/external/include",
+                "/usr/local/include/opencv4"
+            ],
+            "defines": [
+                "NODE_MODULE_NAME"
+            ],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "gnu17",
+            "cppStandard": "gnu++14",
+            "intelliSenseMode": "linux-gcc-arm",
+            "configurationProvider": "ms-vscode.cmake-tools"
         }
     ],
     "version": 4

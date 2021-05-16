@@ -11,6 +11,7 @@ using namespace std;
 
 namespace SBGCK
 {
+    // we might need to move this from here ...
     class Sample
     {
     public:
@@ -31,12 +32,12 @@ namespace SBGCK
 
     class Engine
     {
-    public:
-        static Filemanager fm;
+    // public:
+    //     static Filemanager fm;
 
-        static string getVersion();
+    //     static string getVersion();
 
-        static bool init(string applicationDir, string cfg);
+    //     static bool init(string applicationDir, string cfg);
     };
 }
 
