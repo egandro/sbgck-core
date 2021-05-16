@@ -6,6 +6,7 @@
                 "${default}",
                 "${workspaceFolder}/src",
                 "${workspaceFolder}/include",
+                "${workspaceFolder}/build/external/include",
                 "/usr/local/include/opencv4"
             ],
             "defines": [
@@ -21,6 +22,9 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
+                "${workspaceFolder}/src",
+                "${workspaceFolder}/include",
+                "${workspaceFolder}/build/external/include",
                 "${OPENCV_DIR}\\include"
             ],
             "defines": [
