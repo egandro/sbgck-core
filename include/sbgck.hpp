@@ -8,14 +8,16 @@
 #include "filemanager.hpp"
 #include "soundmanager.hpp"
 #include "cameramanager.hpp"
+#include "componentmanager.hpp"
 
 namespace SBGCK
 {
     class Engine
     {
-        FileManager fm;
-        SoundManager sm;
-        CameraManager cm;
+        FileManager fileManager;
+        SoundManager soundManager;
+        CameraManager cameraManager;
+        ComponentManager componentManager;
 
     public:
         bool init(string applicationDir, string cameraUrl, bool isTesting=false);
