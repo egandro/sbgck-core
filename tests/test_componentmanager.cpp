@@ -1,7 +1,6 @@
 #include "base.hpp"
 #include <sbgck_opencv/log.hpp>
-#include <sbgck_opencv/componentmanager.hpp>
-
+#include "componentmanager.hpp"
 #include "filemanager.hpp"
 
 using namespace SBGCK;
@@ -13,15 +12,22 @@ void testComponentManager(string baseDir, string dirName)
   SBGCK_TEST_BEGIN("testComponentManager");
 
   FileManager fm;
+  string fileName;
+  VFSData data;
 
   SBGCK_ASSERT_THROW(fm.init(baseDir) == true);
   SBGCK_ASSERT_THROW(fm.openVFS(dirName) == true);
 
-  string vfsGameFileName;
-  VFSData data;
-  // SBGCK_ASSERT_THROW(fm.readVFSData(vfsGameFileName, data) == true);
-  // SBGCK_ASSERT_THROW(data.size() > 0);
+  fileName = "boards/Arctic-base.png";
+  SBGCK_ASSERT_THROW(fm.readVFSData(fileName, data) == true);
+  SBGCK_ASSERT_THROW(data.size() > 0);
 
+  fileName = "boards/Arctic-base.json";
+  string json = fm.readVFSString(fileName);
+  SBGCK_ASSERT_THROW(json.empty() == false);
+
+  ComponentManager cm;
+  SBGCK_ASSERT_THROW(cm.loadBoard((unsigned char*) data.content(), data.size(), json, "arctic") == true);
 
   SBGCK_TEST_END();
 }
