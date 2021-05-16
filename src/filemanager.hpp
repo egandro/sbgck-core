@@ -12,7 +12,6 @@ namespace SBGCK
         string baseDir;
         string gameFileOrFolder;
         assetsys_t* assetsys;
-        bool initVFS(string gameName);
         void closeVFS();
 
     public:
@@ -23,10 +22,12 @@ namespace SBGCK
         ~Filemanager() {
             closeVFS();
         }
-        bool dirExist(string dirName);
-        bool fileExist(string fileName);
+        bool physicalDirExist(string dirName);
+        bool physicalFileExist(string fileName);
+        bool gameDirExist(string dirName);
+        bool gameFileExist(string fileName);
         bool init(string applicationDir);
-        bool attachGame(string gameName);
+        bool openVFS(string gameName);
     };
 }
 

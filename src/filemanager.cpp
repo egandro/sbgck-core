@@ -1,25 +1,23 @@
-#pragma warning(push)
-#pragma warning(disable : 4996)
+// this is a bit of a crap in windows
+#ifdef _WIN32
+    #pragma warning(push)
+    #pragma warning(disable : 4996)
+#endif
 #define ASSETSYS_IMPLEMENTATION
 #include <libs/assetsys.h>
 #define STRPOOL_IMPLEMENTATION
 #include <libs/strpool.h>
-#pragma warning(pop)
+#ifdef _WIN32
+    #pragma warning(pop)
+#endif
 
 #include <filesystem>
 #include <fstream>
-namespace fs = std::filesystem;
-
 #include "filemanager.hpp"
 
 using namespace SBGCK;
 
-bool Filemanager::initVFS(string gameName)
-{
-    Log(typelog::INFO) << "Filemanager initVFS: " << gameName;
-
-    return false;
-}
+#define VFS_ROOT_FOLDER "/game"
 
 void Filemanager::closeVFS()
 {
@@ -31,38 +29,57 @@ void Filemanager::closeVFS()
     }
 }
 
-bool Filemanager::dirExist(string dirName)
+bool Filemanager::physicalDirExist(string dirName)
 {
-    Log(typelog::INFO) << "Filemanager dirExist: " << dirName;
     // https://en.cppreference.com/w/cpp/filesystem/is_directory
-    fs::file_status s = fs::status(dirName);
-    if(fs::is_directory(s)) {
+
+    Log(typelog::INFO) << "Filemanager physicalDirExist: " << dirName;
+    filesystem::file_status s = filesystem::status(dirName);
+    if (filesystem::is_directory(s))
+    {
         return true;
     }
     return false;
 }
 
-bool Filemanager::fileExist(string fileName)
+bool Filemanager::physicalFileExist(string fileName)
 {
-    Log(typelog::INFO) << "Filemanager fileExist: " << fileName;
     // https://en.cppreference.com/w/cpp/filesystem/is_regular_file
-    fs::file_status s = fs::status(fileName);
-    if(fs::is_regular_file(s)) {
+
+    Log(typelog::INFO) << "Filemanager physicalFileExist: " << fileName;
+    filesystem::file_status s = filesystem::status(fileName);
+    if (filesystem::is_regular_file(s))
+    {
         ifstream fstream = ifstream(fileName);
-        if(fstream.good()) {
+        if (fstream.good())
+        {
             // we can also read
             return true;
         }
-
     }
     return false;
+}
+
+bool Filemanager::gameDirExist(string dirName)
+{
+    string path = string(VFS_ROOT_FOLDER) + "/" + dirName;
+    int count = assetsys_subdir_count(assetsys, path.c_str());
+    return count > 0;
+}
+
+bool Filemanager::gameFileExist(string fileName)
+{
+    string path = string(VFS_ROOT_FOLDER) + "/" + fileName;
+    char const *result = assetsys_file_name(assetsys, path.c_str(), 0);
+    return result != NULL;
 }
 
 bool Filemanager::init(string applicationDir)
 {
     Log(typelog::INFO) << "Filemanager init: " << applicationDir;
 
-    if(!dirExist(applicationDir)) {
+    if (!physicalDirExist(applicationDir))
+    {
         Log(typelog::ERR) << "Filemanager init directory does not exists: " << applicationDir;
     }
 
@@ -72,22 +89,29 @@ bool Filemanager::init(string applicationDir)
     return true;
 }
 
-bool Filemanager::attachGame(string gameName)
+bool Filemanager::openVFS(string gameName)
 {
-    Log(typelog::INFO) << "Filemanager attachGame: " << gameName;
+    Log(typelog::INFO) << "Filemanager openVFS: " << gameName;
+
+    closeVFS();
 
     // keep this very very simple now
     string fileOrDirectory = baseDir + "/" + gameName;
-    if(!dirExist(fileOrDirectory)) {
+
+    // try raw directory
+    if (!physicalDirExist(fileOrDirectory))
+    {
+        // try a zip file
         fileOrDirectory = fileOrDirectory + ".zip";
         Log(typelog::INFO) << "Filemanager attachGame trying file: " << fileOrDirectory;
-        if(!fileExist(fileOrDirectory)) {
+        if (!physicalFileExist(fileOrDirectory))
+        {
             return false;
         }
     }
 
     assetsys = assetsys_create(0);
-    if (assetsys_mount(assetsys, fileOrDirectory.c_str(), "/game") != ASSETSYS_SUCCESS)
+    if (assetsys_mount(assetsys, fileOrDirectory.c_str(), VFS_ROOT_FOLDER) != ASSETSYS_SUCCESS)
     {
         Log(typelog::ERR) << "Filemanager attachGame assetsys_mount failed";
         return false;
