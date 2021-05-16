@@ -2,15 +2,17 @@
 
 using namespace SBGCK;
 
-// string Engine::getVersion() {
-//     return "not implemented";
-// }
+bool Engine::init(string applicationDir, string url, bool isTesting) {
+    Log(typelog::INFO) << "Engine init: " << applicationDir;
 
-// bool Engine::init(string applicationDir, string cfg) {
-//     Log(typelog::INFO) << "Engine init: " << applicationDir << " cfg " << cfg;
+    if(!fm.init(applicationDir))
+        return false;
 
-//     if(!Engine::fm.init(applicationDir))
-//         return false;
+    if(!sm.init(isTesting))
+        return false;
 
-//     return true;
-// }
+    if(!cm.init(url, isTesting))
+        return false;
+
+    return true;
+}

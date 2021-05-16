@@ -1,5 +1,5 @@
-#ifndef _FILEMANAGER_HPP
-#define _FILEMANAGER_HPP
+#ifndef _FileManager_HPP
+#define _FileManager_HPP
 
 #include <libs/assetsys.h>
 #include <string>
@@ -47,7 +47,7 @@ namespace SBGCK
         void *content() { return contentPtr; }
     };
 
-    class Filemanager
+    class FileManager
     {
         string baseDir;
         string gameFileOrFolder;
@@ -55,12 +55,12 @@ namespace SBGCK
         void closeVFS();
 
     public:
-        Filemanager()
+        FileManager()
             : assetsys(NULL)
         {
         }
 
-        ~Filemanager()
+        ~FileManager()
         {
             closeVFS();
         }

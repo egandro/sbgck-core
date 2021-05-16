@@ -1,14 +1,14 @@
 #include <filesystem>
 #include <fstream>
-#include "filemanager.hpp"
+#include "FileManager.hpp"
 
 using namespace SBGCK;
 
 #define VFS_ROOT_FOLDER "/game"
 
-void Filemanager::closeVFS()
+void FileManager::closeVFS()
 {
-    Log(typelog::INFO) << "Filemanager closeVFS";
+    Log(typelog::INFO) << "FileManager closeVFS";
     if (assetsys != NULL)
     {
         assetsys_destroy(assetsys);
@@ -16,11 +16,11 @@ void Filemanager::closeVFS()
     }
 }
 
-bool Filemanager::physicalDirExist(string dirName)
+bool FileManager::physicalDirExist(string dirName)
 {
     // https://en.cppreference.com/w/cpp/filesystem/is_directory
 
-    Log(typelog::INFO) << "Filemanager physicalDirExist: " << dirName;
+    Log(typelog::INFO) << "FileManager physicalDirExist: " << dirName;
     filesystem::file_status s = filesystem::status(dirName);
     if (filesystem::is_directory(s))
     {
@@ -29,11 +29,11 @@ bool Filemanager::physicalDirExist(string dirName)
     return false;
 }
 
-bool Filemanager::physicalFileExist(string fileName)
+bool FileManager::physicalFileExist(string fileName)
 {
     // https://en.cppreference.com/w/cpp/filesystem/is_regular_file
 
-    Log(typelog::INFO) << "Filemanager physicalFileExist: " << fileName;
+    Log(typelog::INFO) << "FileManager physicalFileExist: " << fileName;
     filesystem::file_status s = filesystem::status(fileName);
     if (filesystem::is_regular_file(s))
     {
@@ -47,27 +47,27 @@ bool Filemanager::physicalFileExist(string fileName)
     return false;
 }
 
-bool Filemanager::gameDirExist(string dirName)
+bool FileManager::gameDirExist(string dirName)
 {
     string path = string(VFS_ROOT_FOLDER) + "/" + dirName;
     int count = assetsys_file_count(assetsys, path.c_str());
     return count > 0;
 }
 
-bool Filemanager::gameFileExist(string fileName)
+bool FileManager::gameFileExist(string fileName)
 {
     string path = string(VFS_ROOT_FOLDER) + "/" + fileName;
     assetsys_file_t file;
     return assetsys_file(assetsys, path.c_str(), &file) == ASSETSYS_SUCCESS;
 }
 
-bool Filemanager::init(string applicationDir)
+bool FileManager::init(string applicationDir)
 {
-    Log(typelog::INFO) << "Filemanager init: " << applicationDir;
+    Log(typelog::INFO) << "FileManager init: " << applicationDir;
 
     if (!physicalDirExist(applicationDir))
     {
-        Log(typelog::ERR) << "Filemanager init directory does not exists: " << applicationDir;
+        Log(typelog::ERR) << "FileManager init directory does not exists: " << applicationDir;
     }
 
     baseDir = applicationDir;
@@ -76,9 +76,9 @@ bool Filemanager::init(string applicationDir)
     return true;
 }
 
-bool Filemanager::openVFS(string gameName)
+bool FileManager::openVFS(string gameName)
 {
-    Log(typelog::INFO) << "Filemanager openVFS: " << gameName;
+    Log(typelog::INFO) << "FileManager openVFS: " << gameName;
 
     closeVFS();
 
@@ -90,7 +90,7 @@ bool Filemanager::openVFS(string gameName)
     {
         // try a zip file
         fileOrDirectory = fileOrDirectory + ".zip";
-        Log(typelog::INFO) << "Filemanager attachGame trying file: " << fileOrDirectory;
+        Log(typelog::INFO) << "FileManager attachGame trying file: " << fileOrDirectory;
         if (!physicalFileExist(fileOrDirectory))
         {
             return false;
@@ -100,18 +100,18 @@ bool Filemanager::openVFS(string gameName)
     assetsys = assetsys_create(0);
     if (assetsys_mount(assetsys, fileOrDirectory.c_str(), VFS_ROOT_FOLDER) != ASSETSYS_SUCCESS)
     {
-        Log(typelog::ERR) << "Filemanager attachGame assetsys_mount failed";
+        Log(typelog::ERR) << "FileManager attachGame assetsys_mount failed";
         return false;
     }
 
-    Log(typelog::INFO) << "Filemanager attachGame mounted: " << fileOrDirectory;
+    Log(typelog::INFO) << "FileManager attachGame mounted: " << fileOrDirectory;
 
     return true;
 }
 
-string Filemanager::readVFSString(string vfsFile)
+string FileManager::readVFSString(string vfsFile)
 {
-    Log(typelog::INFO) << "Filemanager readVFSString: " << vfsFile;
+    Log(typelog::INFO) << "FileManager readVFSString: " << vfsFile;
 
     string path = string(VFS_ROOT_FOLDER) + "/" + vfsFile;
     string res;
@@ -129,7 +129,7 @@ string Filemanager::readVFSString(string vfsFile)
     if (assetsys_file_load(assetsys, file, &resultSize, (void *)content, size) != ASSETSYS_SUCCESS ||
         resultSize != size)
     {
-        Log(typelog::ERR) << "Filemanager readVFSString failed";
+        Log(typelog::ERR) << "FileManager readVFSString failed";
         free(content);
         return res;
     }
@@ -141,9 +141,9 @@ string Filemanager::readVFSString(string vfsFile)
     return res;
 }
 
-bool Filemanager::readVFSData(string vfsFile, VFSData &data)
+bool FileManager::readVFSData(string vfsFile, VFSData &data)
 {
-    Log(typelog::INFO) << "Filemanager readVFSData: " << vfsFile;
+    Log(typelog::INFO) << "FileManager readVFSData: " << vfsFile;
 
     string path = string(VFS_ROOT_FOLDER) + "/" + vfsFile;
 
@@ -160,7 +160,7 @@ bool Filemanager::readVFSData(string vfsFile, VFSData &data)
     if (assetsys_file_load(assetsys, file, &resultSize, (void *)content, size) != ASSETSYS_SUCCESS ||
         resultSize != size)
     {
-        Log(typelog::ERR) << "Filemanager readVFSString failed";
+        Log(typelog::ERR) << "FileManager readVFSString failed";
         free(content);
         return false;
     }

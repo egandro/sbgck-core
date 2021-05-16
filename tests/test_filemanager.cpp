@@ -10,7 +10,7 @@ void testPhysicalDirExist(string baseDir, string dirName)
 {
   SBGCK_TEST_BEGIN("testPhysicalDirExist");
 
-  Filemanager fm;
+  FileManager fm;
 
   SBGCK_ASSERT_THROW(fm.init(baseDir) == true);
   SBGCK_ASSERT_THROW(fm.physicalDirExist(baseDir + "/" + dirName) == true);
@@ -22,7 +22,7 @@ void testPhysicalDirNotExist(string baseDir, string dirName)
 {
   SBGCK_TEST_BEGIN("testPhysicalDirNotExist");
 
-  Filemanager fm;
+  FileManager fm;
 
   SBGCK_ASSERT_THROW(fm.init(baseDir) == true);
   SBGCK_ASSERT_THROW(fm.physicalDirExist(baseDir + "/" + dirName) == false);
@@ -34,7 +34,7 @@ void testPhysicalFileExist(string baseDir, string fileName)
 {
   SBGCK_TEST_BEGIN("testPhysicalFileExist");
 
-  Filemanager fm;
+  FileManager fm;
 
   SBGCK_ASSERT_THROW(fm.init(baseDir) == true);
   SBGCK_ASSERT_THROW(fm.physicalFileExist(baseDir + "/" + fileName) == true);
@@ -46,7 +46,7 @@ void testPhysicalFileNotExist(string baseDir, string fileName)
 {
   SBGCK_TEST_BEGIN("testPhysicalFileNotExist");
 
-  Filemanager fm;
+  FileManager fm;
 
   SBGCK_ASSERT_THROW(fm.init(baseDir) == true);
   SBGCK_ASSERT_THROW(fm.physicalFileExist(baseDir + "/" + fileName) == false);
@@ -58,7 +58,7 @@ void testOpenVFS(string baseDir, string dirName)
 {
   SBGCK_TEST_BEGIN("testOpenVFS");
 
-  Filemanager fm;
+  FileManager fm;
 
   SBGCK_ASSERT_THROW(fm.init(baseDir) == true);
   SBGCK_ASSERT_THROW(fm.openVFS(dirName) == true);
@@ -70,7 +70,7 @@ void testVFSDirExist(string baseDir, string dirName, string vfsGameDir)
 {
   SBGCK_TEST_BEGIN("testVFSDirExist");
 
-  Filemanager fm;
+  FileManager fm;
 
   SBGCK_ASSERT_THROW(fm.init(baseDir) == true);
   SBGCK_ASSERT_THROW(fm.openVFS(dirName) == true);
@@ -83,7 +83,7 @@ void testVFSDirNotExist(string baseDir, string dirName, string vfsGameDir)
 {
   SBGCK_TEST_BEGIN("testVFSDirNotExist");
 
-  Filemanager fm;
+  FileManager fm;
 
   SBGCK_ASSERT_THROW(fm.init(baseDir) == true);
   SBGCK_ASSERT_THROW(fm.openVFS(dirName) == true);
@@ -97,7 +97,7 @@ void testVFSFileExist(string baseDir, string dirName, string vfsGameFileName)
 {
   SBGCK_TEST_BEGIN("testVFSFileExist");
 
-  Filemanager fm;
+  FileManager fm;
 
   SBGCK_ASSERT_THROW(fm.init(baseDir) == true);
   SBGCK_ASSERT_THROW(fm.openVFS(dirName) == true);
@@ -110,7 +110,7 @@ void testVFSFileNotExist(string baseDir, string dirName, string vfsGameFileName)
 {
   SBGCK_TEST_BEGIN("testVFSFileNotExist");
 
-  Filemanager fm;
+  FileManager fm;
 
   SBGCK_ASSERT_THROW(fm.init(baseDir) == true);
   SBGCK_ASSERT_THROW(fm.openVFS(dirName) == true);
@@ -123,7 +123,7 @@ void testVFSReadString(string baseDir, string dirName, string vfsGameFileName, s
 {
   SBGCK_TEST_BEGIN("testVFSReadString");
 
-  Filemanager fm;
+  FileManager fm;
 
   SBGCK_ASSERT_THROW(fm.init(baseDir) == true);
   SBGCK_ASSERT_THROW(fm.openVFS(dirName) == true);
@@ -138,7 +138,7 @@ void testVFSRead(string baseDir, string dirName, string vfsGameFileName, string 
 {
   SBGCK_TEST_BEGIN("testVFSRead");
 
-  Filemanager fm;
+  FileManager fm;
 
   SBGCK_ASSERT_THROW(fm.init(baseDir) == true);
   SBGCK_ASSERT_THROW(fm.openVFS(dirName) == true);

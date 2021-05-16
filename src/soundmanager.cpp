@@ -13,7 +13,7 @@ void SoundManager::testingWait()
     }
 }
 
-bool SampleVFS::load(Filemanager &fm, Sample &desc)
+bool SampleVFS::load(FileManager &fm, Sample &desc)
 {
     Log(typelog::INFO) << "SampleVFS load";
 

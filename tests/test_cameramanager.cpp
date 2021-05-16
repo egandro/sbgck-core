@@ -6,7 +6,6 @@ using namespace SBGCK;
 
 structlog LOGCFG = {};
 
-
 void testInitCamera(string assetFileName)
 {
   SBGCK_TEST_BEGIN("testInitCamera");
@@ -18,11 +17,14 @@ void testInitCamera(string assetFileName)
   SBGCK_TEST_END();
 }
 
-
 int main(int, char **)
 {
   SBGCK_TEST_INIT();
   string frame_png = CMAKE_SOURCE_DIR + string("/tests/images/frame.png");
+
+  LOGCFG.prefix = (char *)"test_cameramanager";
+  LOGCFG.headers = true;
+  LOGCFG.level = typelog::INFO;
 
   testInitCamera(frame_png);
 }

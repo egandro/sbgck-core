@@ -1,7 +1,6 @@
 #ifndef _CAMERAMANAGER_HPP
 #define _CAMERAMANAGER_HPP
 
-#include <libs/assetsys.h>
 #include <string>
 #include <regex>
 #include <sbgck_opencv/log.hpp>

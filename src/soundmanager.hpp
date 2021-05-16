@@ -6,11 +6,32 @@
 #include <soloud/soloud.h>
 #include <soloud/soloud_wav.h>
 
-#include "sbgck.hpp"
 #include "filemanager.hpp"
+#include "property.hpp"
 
 namespace SBGCK
 {
+
+    // we might need to move this from here ...
+
+    class Sample
+    {
+    public:
+        string fileName;
+        //  1.0f is "normal"
+        Property<float> volume;
+        // -1 is left, 1 is right
+        Property<float> pan;
+        // true = loop
+        Property<bool> loop;
+
+        Sample() : volume(1.0f),
+                   pan(0.0f),
+                   loop(false)
+        {
+        }
+    };
+
     class SoundManager
     {
     public:
@@ -63,7 +84,7 @@ namespace SBGCK
             // memory handling already done
         }
 
-        bool load(Filemanager &fm, Sample &desc);
+        bool load(FileManager &fm, Sample &desc);
         bool play();
         bool stop();
     };

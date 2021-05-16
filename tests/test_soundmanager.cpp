@@ -29,7 +29,7 @@ void testVFSReadSample(string baseDir, string dirName, Sample &desc)
 {
   SBGCK_TEST_BEGIN("testVFSReadSample");
 
-  Filemanager fm;
+  FileManager fm;
   SoundManager sm;
   SampleVFS sample(&sm);
 
@@ -44,7 +44,7 @@ void testVFSPlaySample(string baseDir, string dirName, Sample &desc)
 {
   SBGCK_TEST_BEGIN("testVFSPlaySample");
 
-  Filemanager fm;
+  FileManager fm;
   SoundManager sm;
   SampleVFS sample(&sm);
 
@@ -64,7 +64,7 @@ void testVFSPlaySampleParamChanges(string baseDir, string dirName, Sample &desc)
 {
   SBGCK_TEST_BEGIN("testVFSPlaySampleParamChanges");
 
-  Filemanager fm;
+  FileManager fm;
   SoundManager sm;
   SampleVFS sample(&sm);
 
@@ -101,7 +101,7 @@ void testVFSPlayStartStop(string baseDir, string dirName, Sample &desc)
 {
   SBGCK_TEST_BEGIN("testVFSPlayStartStop");
 
-  Filemanager fm;
+  FileManager fm;
   SoundManager sm;
   SampleVFS sample(&sm);
 
@@ -148,7 +148,7 @@ void testVFSPlayStopAll(string baseDir, string dirName, Sample &desc)
 {
   SBGCK_TEST_BEGIN("testVFSPlayStopAll");
 
-  Filemanager fm;
+  FileManager fm;
   SoundManager sm;
   SampleVFS sample(&sm);
 
