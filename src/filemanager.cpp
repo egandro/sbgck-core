@@ -1,6 +1,6 @@
 #include <filesystem>
 #include <fstream>
-#include "FileManager.hpp"
+#include "filemanager.hpp"
 
 using namespace SBGCK;
 

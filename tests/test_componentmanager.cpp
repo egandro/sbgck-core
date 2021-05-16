@@ -29,6 +29,24 @@ void testComponentManager(string baseDir, string dirName)
   ComponentManager cm;
   SBGCK_ASSERT_THROW(cm.loadBoard((unsigned char*) data.content(), data.size(), json, "arctic") == true);
 
+  Token red;
+  red.name = "Token Red";
+  red.geometry = Geometry::Circle;
+  red.color = Scalar(0, 0, 255);
+
+  SBGCK_ASSERT_THROW(cm.loadToken(red) == true);
+
+  Token yesCard;
+  yesCard.name = "Yes Card";
+  yesCard.tokenDetector = TokenDetector::Asset;
+  yesCard.asset.assetDetector = AssetDetector::Feature2D;
+
+  fileName = "assets/card_yes.png";
+  SBGCK_ASSERT_THROW(fm.readVFSData(fileName, data) == true);
+  SBGCK_ASSERT_THROW(data.size() > 0);
+
+  SBGCK_ASSERT_THROW(cm.loadToken(yesCard,(unsigned char*) data.content(), data.size()) == true);
+
   SBGCK_TEST_END();
 }
 
