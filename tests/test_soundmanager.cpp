@@ -7,7 +7,20 @@ using namespace SBGCK;
 
 structlog LOGCFG = {};
 
-#define WANT_TEST_SOUND true
+#define SILENT_TEST_SOUND true
+#define WAIT_FOR_TEST_SOUND true
+
+#if SILENT_TEST_SOUND
+#define WAIT_FOR_SOUNDMANAGER(sm)
+#else
+#if WAIT_FOR_TEST_SOUND
+void WAIT_FOR_SOUNDMANAGER(SoundManager &sm) {
+    sm.testingWait();
+}
+#else
+#define WAIT_FOR_SOUNDMANAGER(sm)
+#endif
+#endif
 
 void testVFSReadSample(string baseDir, string dirName, Sample &desc)
 {
@@ -35,10 +48,10 @@ void testVFSPlaySample(string baseDir, string dirName, Sample &desc)
   SBGCK_ASSERT_THROW(sample.load(fm, desc) == true);
 
   SoundManager sm;
-  SBGCK_ASSERT_THROW(sm.init(WANT_TEST_SOUND) == true);
+  SBGCK_ASSERT_THROW(sm.init(SILENT_TEST_SOUND) == true);
   SBGCK_ASSERT_THROW(sample.play(sm) == true);
 
-  sm.testingWait();
+  WAIT_FOR_SOUNDMANAGER(sm);
 
   SBGCK_TEST_END();
 }
@@ -53,10 +66,25 @@ int main(int, char **)
   Sample tetsno_ogg;
   tetsno_ogg.fileName = "tetsno.ogg";
 
+  Sample tetsno_ogg_left;
+  tetsno_ogg_left.fileName = "tetsno.ogg";
+  tetsno_ogg_left.pan = -1.0f;
+
+  Sample tetsno_ogg_right;
+  tetsno_ogg_right.fileName = "tetsno.ogg";
+  tetsno_ogg_right.pan = 1.0f;
+
+  Sample tetsno_ogg_silent;
+  tetsno_ogg_silent.fileName = "tetsno.ogg";
+  tetsno_ogg_silent.volume = 0.3f;
+
   LOGCFG.prefix = (char *)"test_soundmanager";
   LOGCFG.headers = true;
   LOGCFG.level = typelog::INFO;
 
   testVFSReadSample(baseDir, physicalGameDir, tetsno_ogg);
   testVFSPlaySample(baseDir, physicalGameDir, tetsno_ogg);
+  testVFSPlaySample(baseDir, physicalGameDir, tetsno_ogg_left);
+  testVFSPlaySample(baseDir, physicalGameDir, tetsno_ogg_right);
+  testVFSPlaySample(baseDir, physicalGameDir, tetsno_ogg_silent);
 }
