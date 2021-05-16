@@ -6,13 +6,13 @@
 #include <sstream>
 #include <iostream>
 
-#define CMAKE_SOURCE_DIR         "/home/pi/projects/sbgck/sbgck-core"
-#define CMAKE_CURRENT_BINARY_DIR "/home/pi/projects/sbgck/sbgck-core/build/sbgck-opencv/tests"
-/* #undef CMAKE_PROJECT_BINARY_DIR */
+#cmakedefine CMAKE_SOURCE_DIR         "@CMAKE_SOURCE_DIR@"
+#cmakedefine CMAKE_CURRENT_BINARY_DIR "@CMAKE_CURRENT_BINARY_DIR@"
+#cmakedefine CMAKE_PROJECT_BINARY_DIR "@CMAKE_PROJECT_BINARY_DIR@"
 
-#define CMAKE_MAJOR_VERSION      "3"
-#define CMAKE_MINOR_VERSION      "16"
-#define CMAKE_PATCH_VERSION      "3"
+#cmakedefine CMAKE_MAJOR_VERSION      "@CMAKE_MAJOR_VERSION@"
+#cmakedefine CMAKE_MINOR_VERSION      "@CMAKE_MINOR_VERSION@"
+#cmakedefine CMAKE_PATCH_VERSION      "@CMAKE_PATCH_VERSION@"
 
 #define SBGCK_ASSERT_EQUAL( x, y )                                  \
 {                                                                   \
