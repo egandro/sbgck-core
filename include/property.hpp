@@ -24,16 +24,16 @@ public:
         : connection_(nullptr), connection_id_(-1) {}
 
     Property(T const &val)
-        : value_(val), connection_(nullptr), connection_id_(-1) {}
+        : connection_(nullptr), connection_id_(-1), value_(val) {}
 
     Property(T &&val)
-        : value_(std::move(val)), connection_(nullptr), connection_id_(-1) {}
+        : connection_(nullptr), connection_id_(-1), value_(std::move(val)) {}
 
     Property(Property<T> const &to_copy)
-        : value_(to_copy.value_), connection_(nullptr), connection_id_(-1) {}
+        : connection_(nullptr), connection_id_(-1), value_(to_copy.value_) {}
 
     Property(Property<T> &&to_copy)
-        : value_(std::move(to_copy.value_)), connection_(nullptr), connection_id_(-1) {}
+        : connection_(nullptr), connection_id_(-1), value_(std::move(to_copy.value_)) {}
 
     // returns a Signal which is fired when the internal value
     // will be changed. The old value is passed as parameter.

@@ -47,7 +47,7 @@ find_package(OpenCV REQUIRED)
 
 if(UNIX AND NOT APPLE)
     # on Linux
-    set(SYSTEM_LIBRARIES stdc++fs) # required for filesystem streams on g++
+    set(SYSTEM_LIBRARIES stdc++fs pthread asound) # required for filesystem streams on g++
 endif()
 
 if(DEFINED EXTERNAL_INSTALL_LOCATION)
@@ -71,5 +71,5 @@ macro (create_test target)
   target_link_libraries(${target} ${OpenCV_LIBS} sbgck_core sbgck_opencv soloud ${SYSTEM_LIBRARIES})
 endmacro (create_test)
 
-#create_test(test_filemanager)
+create_test(test_filemanager)
 create_test(test_soundmanager)

@@ -10,7 +10,7 @@ using namespace SBGCK;
 structlog LOGCFG = {};
 
 #define SILENT_TEST_SOUND true
-#define WAIT_FOR_TEST_SOUND false
+#define WAIT_FOR_TEST_SOUND true
 
 #if SILENT_TEST_SOUND
 #define WAIT_FOR_SOUNDMANAGER(sm)
@@ -180,11 +180,11 @@ int main(int, char **)
   LOGCFG.headers = true;
   LOGCFG.level = typelog::INFO;
 
-  // testVFSReadSample(baseDir, physicalGameDir, tetsno_ogg);
-  // testVFSPlaySample(baseDir, physicalGameDir, tetsno_ogg);
-  // testVFSPlaySample(baseDir, physicalGameDir, tetsno_ogg_left);
-  // testVFSPlaySample(baseDir, physicalGameDir, tetsno_ogg_right);
-  // testVFSPlaySample(baseDir, physicalGameDir, tetsno_ogg_silent);
-  // testVFSPlaySampleParamChanges(baseDir, physicalGameDir, tetsno_ogg_dynamic_param_changes);
+  testVFSReadSample(baseDir, physicalGameDir, tetsno_ogg);
+  testVFSPlaySample(baseDir, physicalGameDir, tetsno_ogg);
+  testVFSPlaySample(baseDir, physicalGameDir, tetsno_ogg_left);
+  testVFSPlaySample(baseDir, physicalGameDir, tetsno_ogg_right);
+  testVFSPlaySample(baseDir, physicalGameDir, tetsno_ogg_silent);
+  testVFSPlaySampleParamChanges(baseDir, physicalGameDir, tetsno_ogg_dynamic_param_changes);
   testVFSPlayStartStop(baseDir, physicalGameDir, tetsno_ogg_dynamic_param_changes);
 }

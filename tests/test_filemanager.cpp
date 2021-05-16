@@ -144,7 +144,7 @@ void testVFSRead(string baseDir, string dirName, string vfsGameFileName, string 
   SBGCK_ASSERT_THROW(fm.openVFS(dirName) == true);
   VFSData data;
   SBGCK_ASSERT_THROW(fm.readVFSData(vfsGameFileName, data) == true);
-  SBGCK_ASSERT_THROW(data.size() >= startsWith.size());
+  SBGCK_ASSERT_THROW(data.size() >= (int)startsWith.size());
 
   for(std::string::size_type i = 0; i < startsWith.size(); ++i) {
       char c = startsWith[i];
