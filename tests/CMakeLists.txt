@@ -63,20 +63,7 @@ file(GLOB SOURCE_FILES "../src/*.hpp" "../include/*.hpp")
 macro (create_test target)
   add_executable(${target} ${target}.cpp)
   add_test (NAME ${target} COMMAND $<TARGET_FILE:${target}>)
-  target_link_libraries(${target} ${OpenCV_LIBS} sbgck_opencv)
+  target_link_libraries(${target} ${OpenCV_LIBS} sbgck_core sbgck_opencv soloud)
 endmacro (create_test)
 
-#create_test(test_color_correction) # does not work!
-#create_test(test_token_color_realboard_inrangee.cpp) # does not work!
-
-# create_test(test_asset)
-# create_test(test_board)
-# create_test(test_board_roi)
-# create_test(test_camera)
-# create_test(test_diff)
-# create_test(test_roi)
-# create_test(test_token_asset)
-# create_test(test_token_color)
-create_test(test_token_remote)
-# create_test(test_token_shape)
-# create_test(test_version)
+create_test(test_filemanager)

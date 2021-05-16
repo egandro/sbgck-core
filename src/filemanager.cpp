@@ -62,6 +62,10 @@ bool Filemanager::init(string applicationDir)
 {
     Log(typelog::INFO) << "Filemanager init: " << applicationDir;
 
+    if(!dirExist(applicationDir)) {
+        Log(typelog::ERR) << "Filemanager init directory does not exists: " << applicationDir;
+    }
+
     baseDir = applicationDir;
     closeVFS();
 

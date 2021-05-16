@@ -85,6 +85,9 @@ install(FILES "include/dummy.hpp" DESTINATION include/sbgck_core)
 
 # Enable testing globally. Individual tests may be found in the `tests`
 # subdirectory of the repository.
-# ENABLE_TESTING()
-# ADD_SUBDIRECTORY(tests)
+
+if(BUILD_TESTING)
+    ENABLE_TESTING()
+    ADD_SUBDIRECTORY(tests)
+endif()
 
