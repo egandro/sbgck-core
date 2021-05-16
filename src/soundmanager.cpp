@@ -17,11 +17,10 @@ bool SampleVFS::load(Filemanager &fm, Sample &desc)
 {
     Log(typelog::INFO) << "SampleVFS load";
 
-    if (loaded)
+    if (handle != 0)
     {
-        // bad but we would required the engine as parameter to stop a playing sample
-        Log(typelog::ERR) << "SampleVFS load already loaded";
-        return false;
+        sm->soloud.stop(handle);
+        handle = 0;
     }
 
     if (!fm.readVFSData(desc.fileName, data))
@@ -37,13 +36,41 @@ bool SampleVFS::load(Filemanager &fm, Sample &desc)
         return false;
     }
 
-    wav.setLooping(desc.loop);
-    volume = desc.volume;
-    pan = desc.pan;
+    wav.setLooping(desc.loop.get());
+
+    // save init volumes
+    initVolume = desc.volume.get();
+    initPan  = desc.pan.get();
+
+    // we go on signal/slots here
+    desc.loop.on_change().connect([this](bool value) {
+        wav.setLooping(value);
+        if (handle != 0)
+        {
+            sm->soloud.setLooping(handle, value);
+        }
+    });
+
+    desc.volume.on_change().connect([this](float value) {
+        initVolume = value;
+        if (handle != 0)
+        {
+            sm->soloud.setVolume(handle, value);
+        }
+    });
+
+    desc.pan.on_change().connect([this](float value) {
+        initPan = value;
+        if (handle != 0)
+        {
+            sm->soloud.setPan(handle, value);
+        }
+    });
+
     return true;
 }
 
-bool SampleVFS::play(SoundManager &sm)
+bool SampleVFS::play()
 {
     Log(typelog::INFO) << "SampleVFS play";
 
@@ -53,14 +80,12 @@ bool SampleVFS::play(SoundManager &sm)
         return false;
     }
 
-    handle = sm.soloud.play(wav);
-    sm.soloud.setVolume(handle, volume);
-    sm.soloud.setPan(handle, pan);
+    handle = sm->soloud.play(wav, initVolume, initPan);
 
     return true;
 }
 
-bool SampleVFS::stop(SoundManager &sm)
+bool SampleVFS::stop()
 {
     Log(typelog::INFO) << "SampleVFS stop";
 
@@ -70,6 +95,6 @@ bool SampleVFS::stop(SoundManager &sm)
         return false;
     }
 
-    sm.soloud.stop(handle);
+    sm->soloud.stop(handle);
     return true;
 }

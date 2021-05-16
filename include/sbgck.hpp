@@ -5,6 +5,7 @@
 #include <sbgck_opencv/log.hpp>
 
 #include "filemanager.hpp"
+#include "property.hpp"
 
 using namespace std;
 
@@ -15,11 +16,11 @@ namespace SBGCK
     public:
         string fileName;
         //  1.0f is "normal"
-        float volume;
+        Property<float> volume;
         // -1 is left, 1 is right
-        float pan;
+        Property<float> pan;
         // true = loop
-        bool loop;
+        Property<bool> loop;
 
         Sample() : volume(1.0f),
                    pan(0.0f),

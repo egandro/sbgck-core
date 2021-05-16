@@ -43,17 +43,16 @@ namespace SBGCK
     {
         VFSData data;
         SoLoud::Wav wav;
+        float initPan;
+        float initVolume;
         bool loaded;
-        //  1.0f is "normal"
-        float volume;
-        // -1 is left, 1 is right
-        float pan;
         int handle;
+        SoundManager *sm;
 
         SampleVFS(const SampleVFS &value) {}
 
     public:
-        SampleVFS() : loaded(false), volume(1.0f), pan(0.0f), handle(0) {}
+        SampleVFS(SoundManager *sm) : initPan(0.0f), initVolume(1.0f), loaded(false), handle(0), sm(sm) {}
 
         ~SampleVFS()
         {
@@ -61,8 +60,8 @@ namespace SBGCK
         }
 
         bool load(Filemanager &fm, Sample &desc);
-        bool play(SoundManager &sm);
-        bool stop(SoundManager &sm);
+        bool play();
+        bool stop();
     };
 }
 
