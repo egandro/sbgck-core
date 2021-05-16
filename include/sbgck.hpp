@@ -2,6 +2,7 @@
 #define _SBGCK_HPP
 
 #include <string>
+#include <vector>
 #include <sbgck_opencv/log.hpp>
 
 #include "filemanager.hpp"
@@ -18,6 +19,9 @@ namespace SBGCK
 
     public:
         bool init(string applicationDir, string cameraUrl, bool isTesting=false);
+        // TODO: implement this
+        //vector<string> loadGameList();
+        bool loadGame(string gameName);
     };
 }
 
