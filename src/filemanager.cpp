@@ -1,16 +1,3 @@
-// this is a bit of a crap in windows
-#ifdef _WIN32
-    #pragma warning(push)
-    #pragma warning(disable : 4996)
-#endif
-#define ASSETSYS_IMPLEMENTATION
-#include <libs/assetsys.h>
-#define STRPOOL_IMPLEMENTATION
-#include <libs/strpool.h>
-#ifdef _WIN32
-    #pragma warning(pop)
-#endif
-
 #include <filesystem>
 #include <fstream>
 #include "filemanager.hpp"
@@ -62,7 +49,7 @@ bool Filemanager::physicalFileExist(string fileName)
 
 bool Filemanager::gameDirExist(string dirName)
 {
-    string path = string(VFS_ROOT_FOLDER) + "/" + dirName;
+    string path = string(VFS_ROOT_FOLDER) + "/" + dirName + "/";
     int count = assetsys_subdir_count(assetsys, path.c_str());
     return count > 0;
 }
@@ -70,8 +57,8 @@ bool Filemanager::gameDirExist(string dirName)
 bool Filemanager::gameFileExist(string fileName)
 {
     string path = string(VFS_ROOT_FOLDER) + "/" + fileName;
-    char const *result = assetsys_file_name(assetsys, path.c_str(), 0);
-    return result != NULL;
+    assetsys_file_t file;
+    return assetsys_file(assetsys, path.c_str(), &file) == ASSETSYS_SUCCESS;
 }
 
 bool Filemanager::init(string applicationDir)

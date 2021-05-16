@@ -64,7 +64,7 @@ ExternalProject_Add(libs_lib
 )
 
 include_directories( ${OpenCV_INCLUDE_DIRS} "./src/" "./include/" )
-file(GLOB SOURCE_FILES "./src/*.cpp" "./src/*.hpp" "./include/*.hpp" )
+file(GLOB SOURCE_FILES "./src/*.cpp" "./src/*.c" "./src/*.hpp" "./include/*.hpp" )
 
 add_library(sbgck_core STATIC ${SOURCE_FILES})
 target_include_directories(sbgck_core PUBLIC include)

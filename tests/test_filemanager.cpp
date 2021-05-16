@@ -30,14 +30,14 @@ void testPhysicalFileExist(string baseDir, string fileName)
   SBGCK_TEST_END();
 }
 
-void testOpenVFS(string baseDir, string gameName)
+void testOpenVFS(string baseDir, string dirName)
 {
   SBGCK_TEST_BEGIN("testOpenVFS");
 
   Filemanager fm;
 
   SBGCK_ASSERT_THROW(fm.init(baseDir) == true);
-  SBGCK_ASSERT_THROW(fm.openVFS(gameName) == true);
+  SBGCK_ASSERT_THROW(fm.openVFS(dirName) == true);
 
   SBGCK_TEST_END();
 }
@@ -49,7 +49,7 @@ void testVFSDirExist(string baseDir, string dirName, string vfsGameDir)
   Filemanager fm;
 
   SBGCK_ASSERT_THROW(fm.init(baseDir) == true);
-  SBGCK_ASSERT_THROW(fm.physicalDirExist(baseDir + "/" + dirName) == true);
+  SBGCK_ASSERT_THROW(fm.openVFS(dirName) == true);
   SBGCK_ASSERT_THROW(fm.gameDirExist(vfsGameDir) == true);
 
   SBGCK_TEST_END();
@@ -62,7 +62,7 @@ void testVFSFileExist(string baseDir, string dirName, string vfsGameFileName)
   Filemanager fm;
 
   SBGCK_ASSERT_THROW(fm.init(baseDir) == true);
-  SBGCK_ASSERT_THROW(fm.physicalDirExist(baseDir + "/" + dirName) == true);
+  SBGCK_ASSERT_THROW(fm.openVFS(dirName) == true);
   SBGCK_ASSERT_THROW(fm.gameFileExist(vfsGameFileName) == true);
 
   SBGCK_TEST_END();
@@ -75,7 +75,7 @@ int main(int, char **)
   string physicalGameDir = "test_filemanager";
   string physicalFileName = "README.md";
 
-  string vfsGameDir = "mp3s";
+  string vfsGameDir = "dummydir";
   string vfsGameFileName = "dummy.txt";
 
   LOGCFG.prefix = (char *)"test_filemanager";
