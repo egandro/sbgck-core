@@ -32,6 +32,10 @@ namespace SBGCK
 
         void testingWait();
 
+        void stopAll() {
+            soloud.stopAll();
+        }
+
         ~SoundManager()
         {
             // Clean up SoLoud

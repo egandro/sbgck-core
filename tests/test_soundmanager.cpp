@@ -75,7 +75,7 @@ void testVFSPlaySampleParamChanges(string baseDir, string dirName, Sample &desc)
   SBGCK_ASSERT_THROW(sample.load(fm, desc) == true);
   SBGCK_ASSERT_THROW(sample.play() == true);
 
-#if WAIT_FOR_TEST_SOUND
+#if WAIT_FOR_TEST_SOUND && SILENT_TEST_SOUND==false
   // do some parameter update while playing
   while (sm.soloud.getActiveVoiceCount() > 0)
   {
@@ -112,7 +112,7 @@ void testVFSPlayStartStop(string baseDir, string dirName, Sample &desc)
   SBGCK_ASSERT_THROW(sample.load(fm, desc) == true);
   SBGCK_ASSERT_THROW(sample.play() == true);
 
-#if WAIT_FOR_TEST_SOUND
+#if WAIT_FOR_TEST_SOUND && SILENT_TEST_SOUND==false
   // do some parameter update while playing
   while (sm.soloud.getActiveVoiceCount() > 0)
   {
@@ -134,6 +134,53 @@ void testVFSPlayStartStop(string baseDir, string dirName, Sample &desc)
     {
       // stop
       sample.stop();
+    }
+
+    // go on an endless loop
+    desc.loop.set(true);
+  }
+#endif
+
+  SBGCK_TEST_END();
+}
+
+void testVFSPlayStopAll(string baseDir, string dirName, Sample &desc)
+{
+  SBGCK_TEST_BEGIN("testVFSPlayStopAll");
+
+  Filemanager fm;
+  SoundManager sm;
+  SampleVFS sample(&sm);
+
+  SBGCK_ASSERT_THROW(sm.init(SILENT_TEST_SOUND) == true);
+
+  SBGCK_ASSERT_THROW(fm.init(baseDir) == true);
+  SBGCK_ASSERT_THROW(fm.openVFS(dirName) == true);
+  SBGCK_ASSERT_THROW(sample.load(fm, desc) == true);
+  SBGCK_ASSERT_THROW(sample.play() == true);
+
+#if WAIT_FOR_TEST_SOUND && SILENT_TEST_SOUND==false
+  // do some parameter update while playing
+  while (sm.soloud.getActiveVoiceCount() > 0)
+  {
+    // wait consume some time
+    SoLoud::Thread::sleep(100);
+
+    if (desc.volume.get() < 1.0f)
+    {
+      desc.volume.set(desc.volume.get() + 0.05f);
+    }
+
+    if (desc.pan.get() < 1.0f)
+    {
+      // slow increase here, we want 2 sample loops
+      desc.pan.set(desc.pan.get() + 0.02f);
+    }
+
+    if (desc.pan.get() >= 1.0f)
+    {
+      // stop
+      sm.stopAll();
     }
 
     // go on an endless loop
@@ -186,5 +233,6 @@ int main(int, char **)
   testVFSPlaySample(baseDir, physicalGameDir, tetsno_ogg_right);
   testVFSPlaySample(baseDir, physicalGameDir, tetsno_ogg_silent);
   testVFSPlaySampleParamChanges(baseDir, physicalGameDir, tetsno_ogg_dynamic_param_changes);
-  testVFSPlayStartStop(baseDir, physicalGameDir, tetsno_ogg_dynamic_param_changes);
+  testVFSPlayStartStop(baseDir, physicalGameDir, tetsno_ogg_startstop);
+  testVFSPlayStopAll(baseDir, physicalGameDir, tetsno_ogg_startstop);
 }
