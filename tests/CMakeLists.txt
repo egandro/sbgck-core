@@ -45,6 +45,11 @@ set(CMAKE_CXX_STANDARD 17)
 #set(OpenCV_STATIC ON)
 find_package(OpenCV REQUIRED)
 
+if(UNIX AND NOT APPLE)
+    # on Linux
+    set(SYSTEM_LIBRARIES stdc++fs) # required for filesystem streams on g++
+endif()
+
 if(DEFINED EXTERNAL_INSTALL_LOCATION)
     set(EXTERNAL_INSTALL_LOCATION ${EXTERNAL_INSTALL_LOCATION})
 else()
@@ -53,7 +58,7 @@ endif()
 #message("using EXTERNAL_INSTALL_LOCATION: ${EXTERNAL_INSTALL_LOCATION}")
 
 include_directories(${EXTERNAL_INSTALL_LOCATION}/include)
-link_directories(${EXTERNAL_INSTALL_LOCATION}/lib)
+link_directories(${EXTERNAL_INSTALL_LOCATION}/lib ${EXTERNAL_INSTALL_LOCATION}/lib64)
 
 include_directories( ${OpenCV_INCLUDE_DIRS}  "../tests/" "../src/" "../include/" )
 file(GLOB SOURCE_FILES "../src/*.hpp" "../include/*.hpp")
@@ -63,7 +68,7 @@ file(GLOB SOURCE_FILES "../src/*.hpp" "../include/*.hpp")
 macro (create_test target)
   add_executable(${target} ${target}.cpp)
   add_test (NAME ${target} COMMAND $<TARGET_FILE:${target}>)
-  target_link_libraries(${target} ${OpenCV_LIBS} sbgck_core sbgck_opencv soloud)
+  target_link_libraries(${target} ${OpenCV_LIBS} sbgck_core sbgck_opencv soloud ${SYSTEM_LIBRARIES})
 endmacro (create_test)
 
 create_test(test_filemanager)
