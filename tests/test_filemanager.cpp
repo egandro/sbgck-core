@@ -18,6 +18,18 @@ void testPhysicalDirExist(string baseDir, string dirName)
   SBGCK_TEST_END();
 }
 
+void testPhysicalDirNotExist(string baseDir, string dirName)
+{
+  SBGCK_TEST_BEGIN("testPhysicalDirNotExist");
+
+  Filemanager fm;
+
+  SBGCK_ASSERT_THROW(fm.init(baseDir) == true);
+  SBGCK_ASSERT_THROW(fm.physicalDirExist(baseDir + "/" + dirName) == false);
+
+  SBGCK_TEST_END();
+}
+
 void testPhysicalFileExist(string baseDir, string fileName)
 {
   SBGCK_TEST_BEGIN("testPhysicalFileExist");
@@ -26,6 +38,18 @@ void testPhysicalFileExist(string baseDir, string fileName)
 
   SBGCK_ASSERT_THROW(fm.init(baseDir) == true);
   SBGCK_ASSERT_THROW(fm.physicalFileExist(baseDir + "/" + fileName) == true);
+
+  SBGCK_TEST_END();
+}
+
+void testPhysicalFileNotExist(string baseDir, string fileName)
+{
+  SBGCK_TEST_BEGIN("testPhysicalFileNotExist");
+
+  Filemanager fm;
+
+  SBGCK_ASSERT_THROW(fm.init(baseDir) == true);
+  SBGCK_ASSERT_THROW(fm.physicalFileExist(baseDir + "/" + fileName) == false);
 
   SBGCK_TEST_END();
 }
@@ -55,6 +79,20 @@ void testVFSDirExist(string baseDir, string dirName, string vfsGameDir)
   SBGCK_TEST_END();
 }
 
+void testVFSDirNotExist(string baseDir, string dirName, string vfsGameDir)
+{
+  SBGCK_TEST_BEGIN("testVFSDirNotExist");
+
+  Filemanager fm;
+
+  SBGCK_ASSERT_THROW(fm.init(baseDir) == true);
+  SBGCK_ASSERT_THROW(fm.openVFS(dirName) == true);
+  SBGCK_ASSERT_THROW(fm.gameDirExist(vfsGameDir) == false);
+
+  SBGCK_TEST_END();
+}
+
+
 void testVFSFileExist(string baseDir, string dirName, string vfsGameFileName)
 {
   SBGCK_TEST_BEGIN("testVFSFileExist");
@@ -67,6 +105,57 @@ void testVFSFileExist(string baseDir, string dirName, string vfsGameFileName)
 
   SBGCK_TEST_END();
 }
+
+void testVFSFileNotExist(string baseDir, string dirName, string vfsGameFileName)
+{
+  SBGCK_TEST_BEGIN("testVFSFileNotExist");
+
+  Filemanager fm;
+
+  SBGCK_ASSERT_THROW(fm.init(baseDir) == true);
+  SBGCK_ASSERT_THROW(fm.openVFS(dirName) == true);
+  SBGCK_ASSERT_THROW(fm.gameFileExist(vfsGameFileName) == false);
+
+  SBGCK_TEST_END();
+}
+
+void testVFSReadString(string baseDir, string dirName, string vfsGameFileName, string startsWith)
+{
+  SBGCK_TEST_BEGIN("testVFSReadString");
+
+  Filemanager fm;
+
+  SBGCK_ASSERT_THROW(fm.init(baseDir) == true);
+  SBGCK_ASSERT_THROW(fm.openVFS(dirName) == true);
+  string str = fm.readVFSString(vfsGameFileName);
+  SBGCK_ASSERT_THROW(str.empty() == false);
+  SBGCK_ASSERT_THROW(str.rfind(startsWith, 0) == 0); // starts with (newline agnostic)
+
+  SBGCK_TEST_END();
+}
+
+void testVFSRead(string baseDir, string dirName, string vfsGameFileName, string startsWith)
+{
+  SBGCK_TEST_BEGIN("testVFSRead");
+
+  Filemanager fm;
+
+  SBGCK_ASSERT_THROW(fm.init(baseDir) == true);
+  SBGCK_ASSERT_THROW(fm.openVFS(dirName) == true);
+  VFSData data;
+  SBGCK_ASSERT_THROW(fm.readVFSData(vfsGameFileName, data) == true);
+  SBGCK_ASSERT_THROW(data.size() >= startsWith.size());
+
+  for(std::string::size_type i = 0; i < startsWith.size(); ++i) {
+      char c = startsWith[i];
+      char *str = (char*)data.content();
+      SBGCK_ASSERT_THROW(c == str[i]);
+  }
+
+  SBGCK_TEST_END();
+}
+
+
 
 int main(int, char **)
 {
@@ -83,8 +172,14 @@ int main(int, char **)
   LOGCFG.level = typelog::INFO;
 
   testPhysicalDirExist(baseDir, physicalGameDir);
+  testPhysicalDirNotExist(baseDir, "garbage");
   testPhysicalFileExist(baseDir, physicalFileName);
+  testPhysicalFileNotExist(baseDir, "garbage.txt");
   testOpenVFS(baseDir, physicalGameDir);
   testVFSDirExist(baseDir, physicalGameDir, vfsGameDir);
+  testVFSDirNotExist(baseDir, physicalGameDir, "garbage");
   testVFSFileExist(baseDir, physicalGameDir, vfsGameFileName);
+  testVFSFileNotExist(baseDir, physicalGameDir, "garbage.txt");
+  testVFSReadString(baseDir, physicalGameDir, vfsGameFileName, "0123456789");
+  testVFSRead(baseDir, physicalGameDir, vfsGameFileName, "0123456789");
 }

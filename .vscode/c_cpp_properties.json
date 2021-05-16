@@ -6,7 +6,7 @@
                 "${default}",
                 "${workspaceFolder}/src",
                 "${workspaceFolder}/include",
-                "${workspaceFolder}/build/external/include",
+                "${workspaceFolder}/external/include",
                 "/usr/local/include/opencv4"
             ],
             "defines": [
@@ -21,10 +21,9 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/**",
-                "${workspaceFolder}/src",
-                "${workspaceFolder}/include",
-                "${workspaceFolder}/build/external/include",
+                "${workspaceFolder}\\src",
+                "${workspaceFolder}\\include",
+                "${workspaceFolder}\\build\\external\\include",
                 "${OPENCV_DIR}\\include"
             ],
             "defines": [
@@ -32,8 +31,8 @@
                 "UNICODE",
                 "_UNICODE"
             ],
-            "windowsSdkVersion": "10.0.18362.0",
-            "compilerPath": "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Tools/MSVC/14.26.28801/bin/Hostx64/x64/cl.exe",
+            "windowsSdkVersion": "10.0.17763.0",
+            "compilerPath": "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Tools/MSVC/14.28.29910/bin/Hostx64/x64/cl.exe",
             "cStandard": "c17",
             "cppStandard": "c++17",
             "intelliSenseMode": "windows-msvc-x64"

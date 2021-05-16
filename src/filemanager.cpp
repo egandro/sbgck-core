@@ -49,8 +49,8 @@ bool Filemanager::physicalFileExist(string fileName)
 
 bool Filemanager::gameDirExist(string dirName)
 {
-    string path = string(VFS_ROOT_FOLDER) + "/" + dirName + "/";
-    int count = assetsys_subdir_count(assetsys, path.c_str());
+    string path = string(VFS_ROOT_FOLDER) + "/" + dirName;
+    int count = assetsys_file_count(assetsys, path.c_str());
     return count > 0;
 }
 
@@ -105,6 +105,68 @@ bool Filemanager::openVFS(string gameName)
     }
 
     Log(typelog::INFO) << "Filemanager attachGame mounted: " << fileOrDirectory;
+
+    return true;
+}
+
+string Filemanager::readVFSString(string vfsFile)
+{
+    Log(typelog::INFO) << "Filemanager readVFSString: " << vfsFile;
+
+    string path = string(VFS_ROOT_FOLDER) + "/" + vfsFile;
+    string res;
+
+    assetsys_file_t file;
+    if (assetsys_file(assetsys, path.c_str(), &file) != ASSETSYS_SUCCESS)
+    {
+        return res;
+    }
+
+    int size = assetsys_file_size(assetsys, file);
+    int resultSize;
+    char *content = (char *)malloc(size + 1); // extra space for '\0'
+
+    if (assetsys_file_load(assetsys, file, &resultSize, (void *)content, size) != ASSETSYS_SUCCESS ||
+        resultSize != size)
+    {
+        Log(typelog::ERR) << "Filemanager readVFSString failed";
+        free(content);
+        return res;
+    }
+
+    content[size] = '\0'; // zero terminate the text file
+    res = string(content);
+    free(content);
+
+    return res;
+}
+
+bool Filemanager::readVFSData(string vfsFile, VFSData &data)
+{
+    Log(typelog::INFO) << "Filemanager readVFSData: " << vfsFile;
+
+    string path = string(VFS_ROOT_FOLDER) + "/" + vfsFile;
+
+    assetsys_file_t file;
+    if (assetsys_file(assetsys, path.c_str(), &file) != ASSETSYS_SUCCESS)
+    {
+        return false;
+    }
+
+    int size = assetsys_file_size(assetsys, file);
+    int resultSize;
+    char *content = (char *)malloc(size);
+
+    if (assetsys_file_load(assetsys, file, &resultSize, (void *)content, size) != ASSETSYS_SUCCESS ||
+        resultSize != size)
+    {
+        Log(typelog::ERR) << "Filemanager readVFSString failed";
+        free(content);
+        return false;
+    }
+
+    // no free here - the VFSData will do that
+    data.setData(size, content);
 
     return true;
 }
