@@ -50,6 +50,22 @@ void testComponentManager(string baseDir, string dirName)
   SBGCK_TEST_END();
 }
 
+void testComponentManagerGameConfig(string baseDir, string dirName)
+{
+  SBGCK_TEST_BEGIN("testComponentManagerGameConfig");
+
+  FileManager fm;
+
+  SBGCK_ASSERT_THROW(fm.init(baseDir) == true);
+  SBGCK_ASSERT_THROW(fm.openVFS(dirName) == true);
+
+  string fileName = "gameconfig.json";
+
+  ComponentManager cm;
+  SBGCK_ASSERT_THROW(cm.loadFromComponentFile(fm, fileName) == true);
+
+  SBGCK_TEST_END();
+}
 
 int main(int, char **)
 {
@@ -62,4 +78,5 @@ int main(int, char **)
   LOGCFG.level = typelog::INFO;
 
   testComponentManager(baseDir, gameName);
+  testComponentManagerGameConfig(baseDir, gameName);
 }
