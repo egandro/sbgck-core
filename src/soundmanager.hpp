@@ -45,7 +45,6 @@ namespace SBGCK
 
     class SampleVFS
     {
-        VFSData data;
         SoLoud::Wav wav;
         float initPan;
         float initVolume;

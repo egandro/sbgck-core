@@ -23,13 +23,15 @@ bool SampleVFS::load(FileManager &fm, Sample &desc)
         handle = 0;
     }
 
+    VFSData data;
     if (!fm.readVFSData(desc.fileName, data))
     {
         Log(typelog::ERR) << "SampleVFS load failed";
         return false;
     }
 
-    loaded = wav.loadMem((const unsigned char *)data.content(), data.size(), false, false) == SoLoud::SO_NO_ERROR;
+    // copy data to wav. the wave will also free the ram
+    loaded = wav.loadMem((const unsigned char *)data.content(), data.size(), true, true) == SoLoud::SO_NO_ERROR;
     if (!loaded)
     {
         Log(typelog::ERR) << "SampleVFS load failed";
