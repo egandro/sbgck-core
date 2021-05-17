@@ -157,6 +157,14 @@
             "name": "Yellow Triangle",
             "geometry": "Triangle",
             "color": "255,255,0"
+        },
+        {
+            "name": "Card No",
+            "asset": "card_no.png"
+        },
+        {
+            "name": "Card Yes",
+            "asset": "card_yes.png"
         }
     ]
 }

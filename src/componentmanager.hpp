@@ -15,9 +15,11 @@ namespace SBGCK
     class ComponentManager
     {
         ComponentManager(const ComponentManager &value) {}
-        vector<Board> boards;
 
     public:
+        vector<Board> boards;
+        vector<Token> tokens;
+
         ComponentManager() {}
 
         ~ComponentManager() {}
@@ -45,6 +47,8 @@ namespace SBGCK
                     return false;
                 }
             }
+
+            boards.push_back(board);
 
             return true;
         }
@@ -83,7 +87,6 @@ namespace SBGCK
             string jsonStr = fm.readVFSString(gameConfigJsonFile);
             if (jsonStr.empty())
             {
-
                 Log(typelog::ERR) << "ComponentManager loadFromComponentFile - json file not loaded";
                 return false;
             }
@@ -115,6 +118,7 @@ namespace SBGCK
 
                     if (asset.empty())
                     {
+                        Log(typelog::ERR) << "ComponentManager loadFromComponentFile - board with empty asset ";
                         return false;
                     }
 
@@ -122,11 +126,13 @@ namespace SBGCK
                     string fileName = string("boards/") + asset;
                     if (!fm.readVFSData(fileName, data))
                     {
+                        Log(typelog::ERR) << "ComponentManager loadFromComponentFile - board asset loading failed";
                         return false;
                     }
 
                     if (!loadBoard((unsigned char *)data.content(), data.size(), map, name))
                     {
+                        Log(typelog::ERR) << "ComponentManager loadFromComponentFile - board loadBoard failed";
                         return false;
                     }
                 }
@@ -140,40 +146,39 @@ namespace SBGCK
                     VFSData data;
                     string tokenGeometry;
 
-                    if ((*it)["geometry"].empty())
+                    if (!(*it)["geometry"].empty())
                     {
-                        return false;
-                    }
+                        tokenGeometry = (*it)["geometry"].get<std::string>();
 
-                    tokenGeometry = (*it)["geometry"].get<std::string>();
-
-                    if (tokenGeometry == "Triangle")
-                    {
-                        token.geometry = Geometry::Triangle;
-                    }
-                    else if (tokenGeometry == "Square")
-                    {
-                        token.geometry = Geometry::Square;
-                    }
-                    else if (tokenGeometry == "Rect")
-                    {
-                        token.geometry = Geometry::Rect;
-                    }
-                    else if (tokenGeometry == "Pentagon")
-                    {
-                        token.geometry = Geometry::Pentagon;
-                    }
-                    else if (tokenGeometry == "Hexagon")
-                    {
-                        token.geometry = Geometry::Hexagon;
-                    }
-                    else if (tokenGeometry == "Circle")
-                    {
-                        token.geometry = Geometry::Circle;
-                    }
-                    if (token.geometry == Geometry::None)
-                    {
-                        return false;
+                        if (tokenGeometry == "Triangle")
+                        {
+                            token.geometry = Geometry::Triangle;
+                        }
+                        else if (tokenGeometry == "Square")
+                        {
+                            token.geometry = Geometry::Square;
+                        }
+                        else if (tokenGeometry == "Rect")
+                        {
+                            token.geometry = Geometry::Rect;
+                        }
+                        else if (tokenGeometry == "Pentagon")
+                        {
+                            token.geometry = Geometry::Pentagon;
+                        }
+                        else if (tokenGeometry == "Hexagon")
+                        {
+                            token.geometry = Geometry::Hexagon;
+                        }
+                        else if (tokenGeometry == "Circle")
+                        {
+                            token.geometry = Geometry::Circle;
+                        }
+                        if (token.geometry == Geometry::None)
+                        {
+                            Log(typelog::ERR) << "ComponentManager loadFromComponentFile - token unknown geometry:" << tokenGeometry;
+                            return false;
+                        }
                     }
 
                     if (!(*it)["color"].empty())
@@ -194,6 +199,12 @@ namespace SBGCK
                                 ss.ignore();
                         }
 
+                        if (vect.size() != 3)
+                        {
+                            Log(typelog::ERR) << "ComponentManager loadFromComponentFile - token has invalid color: " << color;
+                            return false;
+                        }
+
                         // we need to convert this into BGR from RGB
                         token.color = Scalar(vect.at(2), vect.at(1), vect.at(0));
                     }
@@ -207,20 +218,23 @@ namespace SBGCK
                     if (!(*it)["asset"].empty())
                     {
                         string asset = (*it)["asset"].get<std::string>();
-                        string fileName = string("asset/") + asset;
+                        string fileName = string("assets/") + asset;
                         if (!fm.readVFSData(fileName, data))
                         {
+                            Log(typelog::ERR) << "ComponentManager loadFromComponentFile - token asset loading failed";
                             return false;
                         }
                     }
 
                     if (!loadToken(token, (unsigned char *)data.content(), data.size()))
                     {
+                        Log(typelog::ERR) << "ComponentManager loadFromComponentFile - token loadToken failed";
                         return false;
                     }
+
+                    tokens.push_back(token);
                 }
             }
-
             return true;
         }
     };

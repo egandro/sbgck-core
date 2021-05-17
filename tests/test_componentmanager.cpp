@@ -55,14 +55,16 @@ void testComponentManagerGameConfig(string baseDir, string dirName)
   SBGCK_TEST_BEGIN("testComponentManagerGameConfig");
 
   FileManager fm;
+  ComponentManager cm;
 
   SBGCK_ASSERT_THROW(fm.init(baseDir) == true);
   SBGCK_ASSERT_THROW(fm.openVFS(dirName) == true);
 
   string fileName = "gameconfig.json";
 
-  ComponentManager cm;
   SBGCK_ASSERT_THROW(cm.loadFromComponentFile(fm, fileName) == true);
+  SBGCK_ASSERT_THROW(cm.boards.size() == 1);
+  SBGCK_ASSERT_THROW(cm.tokens.size() == 32);
 
   SBGCK_TEST_END();
 }
