@@ -57,11 +57,6 @@ namespace SBGCK
     public:
         SampleVFS(SoundManager *sm) : initPan(0.0f), initVolume(1.0f), loaded(false), handle(0), sm(sm) {}
 
-        ~SampleVFS()
-        {
-            // memory handling already done
-        }
-
         bool load(FileManager &fm, Sample &desc);
         bool play();
         bool stop();
