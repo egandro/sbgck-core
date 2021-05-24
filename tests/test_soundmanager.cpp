@@ -18,6 +18,7 @@ structlog LOGCFG = {};
 #if WAIT_FOR_TEST_SOUND
 void WAIT_FOR_SOUNDMANAGER(SoundManager &sm)
 {
+  // TODO: make a version of this for play - playWaiting
   sm.testingWait();
 }
 #else
