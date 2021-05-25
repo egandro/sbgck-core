@@ -12,18 +12,64 @@
 
 namespace SBGCK
 {
+
+    class QueryTokenParam
+    {
+    public:
+        vector<string> ROI;
+        int timeout;
+        vector<string> names;
+    };
+
+    class QueryTokenResultToken
+    {
+    public:
+        string ROI;
+        string name;
+    };
+
+    class QueryTokenResult
+    {
+    public:
+        string error;
+        vector<QueryTokenResultToken> tokens;
+    };
+
     class Engine
     {
+        string language;
+
         FileManager fileManager;
         SoundManager soundManager;
         CameraManager cameraManager;
         ComponentManager componentManager;
+        void queryTokens(QueryTokenParam &param, QueryTokenResult &result);
 
     public:
-        bool init(string applicationDir, string cameraUrl, bool isTesting=false);
-        // TODO: implement this
-        //vector<string> loadGameList();
-        bool loadGame(string gameName);
+        bool isTesting;
+
+        Engine()
+            : isTesting(false)
+        {
+        }
+
+        //////////////////////////////////////////
+        // Management API for UI
+        //////////////////////////////////////////
+
+        bool init(string applicationDir, string cameraUrl);
+        bool loadGame(string gameName, string lang);
+
+        //////////////////////////////////////////
+        // Core Engine API
+        //////////////////////////////////////////
+
+        bool playSample(string sampleName);
+        bool playSampleSync(string sampleName, bool isLocalized);
+        void stopAllAudio();
+        bool calibrateReferenceFrame();
+        bool detectColorCalibrationCard();
+        string queryTokens(string json);
     };
 }
 
