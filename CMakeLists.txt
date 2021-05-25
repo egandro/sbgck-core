@@ -77,7 +77,7 @@ install(TARGETS sbgck_core
         INCLUDES DESTINATION include
         ARCHIVE DESTINATION lib)
 
-install(FILES "include/dummy.hpp" DESTINATION include/sbgck_core)
+install(FILES "include/sbgck.hpp" DESTINATION include/sbgck_core)
 
 ########################################################################
 # Tests - idea https://bastian.rieck.me/blog/posts/2017/simple_unit_tests/
