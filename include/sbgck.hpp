@@ -5,10 +5,10 @@
 #include <vector>
 #include <sbgck_opencv/log.hpp>
 
-#include "filemanager.hpp"
-#include "soundmanager.hpp"
-#include "cameramanager.hpp"
-#include "componentmanager.hpp"
+#include "internal/filemanager.hpp"
+#include "internal/soundmanager.hpp"
+#include "internal/cameramanager.hpp"
+#include "internal/componentmanager.hpp"
 
 namespace SBGCK
 {

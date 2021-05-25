@@ -1,5 +1,5 @@
-#include "soundmanager.hpp"
 #include <soloud/soloud_thread.h>
+#include "internal/soundmanager.hpp"
 
 using namespace SBGCK;
 
