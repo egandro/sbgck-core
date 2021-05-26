@@ -115,15 +115,14 @@ void testEngineStopAllAudio(string baseDir, string gameName, string assetFileNam
 
   SBGCK_ASSERT_THROW(engine.init(baseDir, assetFileName) == true);
   SBGCK_ASSERT_THROW(engine.loadGame(gameName, "en") == true);
-  //SBGCK_ASSERT_THROW(engine.playSample("Ove - Earth Is All We Have .ogg") == true);
-  SBGCK_ASSERT_THROW(engine.playSample("tetsno.ogg") == true);
+  SBGCK_ASSERT_THROW(engine.playSample("Ove - Earth Is All We Have .ogg") == true);
 
 #if SILENT_TEST_SOUND == false
   // https://stackoverflow.com/questions/19555121/how-to-get-current-timestamp-in-milliseconds-since-1970-just-the-way-java-gets
   unsigned __int64 end =
     std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 
-  end += 1000 * 20; // 10 sec
+  end += 1000 * 10; // 10 sec
 
   while (true)
   {

@@ -49,7 +49,7 @@ namespace SBGCK
 
     class SampleVFS
     {
-        SoLoud::Wav wav;
+        SoLoud::Wav *wav;
         float initPan;
         float initVolume;
         bool loaded;
@@ -59,7 +59,16 @@ namespace SBGCK
         SampleVFS(const SampleVFS &value) {}
 
     public:
-        SampleVFS(SoundManager *sm) : initPan(0.0f), initVolume(1.0f), loaded(false), handle(0), sm(sm) {}
+        SampleVFS(SoundManager *sm) : wav(NULL), initPan(0.0f), initVolume(1.0f), loaded(false), handle(0), sm(sm) {}
+
+        virtual ~SampleVFS()
+        {
+            if (wav != NULL)
+            {
+                delete wav;
+                wav = NULL;
+            }
+        }
 
         bool load(FileManager &fm, Sample &desc);
         bool play();

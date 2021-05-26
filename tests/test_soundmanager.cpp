@@ -1,7 +1,7 @@
 #include "base.hpp"
 #include <sbgck_opencv/log.hpp>
-#include "filemanager.hpp"
-#include "soundmanager.hpp"
+#include "internal/filemanager.hpp"
+#include "internal/soundmanager.hpp"
 
 #include <soloud/soloud_thread.h>
 

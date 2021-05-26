@@ -13,6 +13,7 @@ void SoundManager::testingWait()
     }
 }
 
+    VFSData dataX;
 bool SampleVFS::load(FileManager &fm, Sample &desc)
 {
     Log(typelog::INFO) << "SampleVFS load";
@@ -23,22 +24,28 @@ bool SampleVFS::load(FileManager &fm, Sample &desc)
         handle = 0;
     }
 
-    VFSData data;
-    if (!fm.readVFSData(desc.fileName, data))
+    if (!fm.readVFSData(desc.fileName, dataX))
     {
         Log(typelog::ERR) << "SampleVFS load failed";
         return false;
     }
 
-    // copy data to wav. the wave will also free the ram
-    loaded = wav.loadMem((const unsigned char *)data.content(), data.size(), true, true) == SoLoud::SO_NO_ERROR;
+    if(wav!=NULL) {
+        delete wav;
+    }
+
+    // we need this as pointer
+    wav = new SoLoud::Wav();
+
+    // copy data to wav-> the wave will also free the ram
+    loaded = wav->loadMem((const unsigned char *)dataX.content(), dataX.size(), true) == SoLoud::SO_NO_ERROR;
     if (!loaded)
     {
         Log(typelog::ERR) << "SampleVFS load failed";
         return false;
     }
 
-    wav.setLooping(desc.loop.get());
+    wav->setLooping(desc.loop.get());
 
     // save init volumes
     initVolume = desc.volume.get();
@@ -46,7 +53,7 @@ bool SampleVFS::load(FileManager &fm, Sample &desc)
 
     // we go on signal/slots here
     desc.loop.on_change().connect([this](bool value) {
-        wav.setLooping(value);
+        wav->setLooping(value);
         if (handle != 0)
         {
             sm->soloud.setLooping(handle, value);
@@ -82,7 +89,7 @@ bool SampleVFS::play()
         return false;
     }
 
-    handle = sm->soloud.play(wav, initVolume, initPan);
+    handle = sm->soloud.play(*wav, initVolume, initPan);
 
     return true;
 }

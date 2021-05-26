@@ -58,6 +58,7 @@ bool Engine::setBoard(string boardName)
     return true;
 }
 
+
 bool Engine::playSample(string sampleName)
 {
     Log(typelog::INFO) << "Engine playSample: " << sampleName;
@@ -112,7 +113,8 @@ bool Engine::playSampleSync(string sampleName, bool isLocalized)
 bool Engine::stopAllAudio()
 {
     Log(typelog::INFO) << "Engine stopAllAudio";
-    return false;
+    soundManager.stopAll();
+    return true;
 }
 
 bool Engine::calibrateReferenceFrame()
