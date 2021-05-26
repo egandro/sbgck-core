@@ -45,8 +45,9 @@ bool Engine::playSampleSync(string sampleName, bool isLocalized) {
     return false;
 }
 
-void Engine::stopAllAudio() {
+bool Engine::stopAllAudio() {
     Log(typelog::INFO) << "Engine stopAllAudio";
+    return false;
 }
 
 bool Engine::calibrateReferenceFrame() {

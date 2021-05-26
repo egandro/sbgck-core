@@ -66,7 +66,7 @@ namespace SBGCK
 
         bool playSample(string sampleName);
         bool playSampleSync(string sampleName, bool isLocalized);
-        void stopAllAudio();
+        bool stopAllAudio();
         bool calibrateReferenceFrame();
         bool detectColorCalibrationCard();
         string queryTokens(string json);
