@@ -1,51 +1,76 @@
 #include "base.hpp"
 #include <sbgck_opencv/log.hpp>
-#include "componentmanager.hpp"
-#include "filemanager.hpp"
+#include "internal/componentmanager.hpp"
+#include "internal/filemanager.hpp"
 
 using namespace SBGCK;
 
 structlog LOGCFG = {};
 
-void testComponentManager(string baseDir, string dirName)
+void testComponentManagerSetBoard(string baseDir, string dirName)
 {
-  SBGCK_TEST_BEGIN("testComponentManager");
+  SBGCK_TEST_BEGIN("testComponentManagerSetBoard");
 
   FileManager fm;
-  string fileName;
-  VFSData data;
+  ComponentManager cm;
 
   SBGCK_ASSERT_THROW(fm.init(baseDir) == true);
   SBGCK_ASSERT_THROW(fm.openVFS(dirName) == true);
 
-  fileName = "boards/Arctic-base.png";
-  SBGCK_ASSERT_THROW(fm.readVFSData(fileName, data) == true);
-  SBGCK_ASSERT_THROW(data.size() > 0);
+  string fileName = "board_test.json";
 
-  fileName = "boards/Arctic-base.json";
-  string json = fm.readVFSString(fileName);
-  SBGCK_ASSERT_THROW(json.empty() == false);
+  SBGCK_ASSERT_THROW(cm.loadFromComponentFile(fm, fileName) == true);
+  SBGCK_ASSERT_THROW(cm.boards.size() == 3);
+  SBGCK_ASSERT_THROW(cm.tokens.size() == 0);
+  SBGCK_ASSERT_THROW(cm.gameName == "Board Test");
 
+  SBGCK_ASSERT_THROW(cm.setBoard("Unknown Board", false) == false);
+  SBGCK_ASSERT_THROW(cm.setBoard("Board Test 1", false) == true);
+  SBGCK_ASSERT_THROW(cm.currentBoard != NULL);
+
+  SBGCK_ASSERT_THROW(cm.currentBoard->roiManager.isRegion("invalid") == false);
+  SBGCK_ASSERT_THROW(cm.currentBoard->roiManager.isRegion("#my poly") == true);
+
+  SBGCK_TEST_END();
+}
+
+void testComponentManagerLoadToken(string baseDir, string dirName)
+{
+  SBGCK_TEST_BEGIN("testComponentManagerLoadToken");
+
+  FileManager fm;
   ComponentManager cm;
-  SBGCK_ASSERT_THROW(cm.loadBoard((unsigned char*) data.content(), data.size(), json, "arctic") == true);
 
-  Token red;
-  red.name = "Token Red";
-  red.geometry = Geometry::Circle;
-  red.color = Scalar(0, 0, 255);
+  SBGCK_ASSERT_THROW(fm.init(baseDir) == true);
+  SBGCK_ASSERT_THROW(fm.openVFS(dirName) == true);
 
-  SBGCK_ASSERT_THROW(cm.loadToken(red) == true);
+  string fileName = "token_test.json";
 
-  Token yesCard;
-  yesCard.name = "Yes Card";
-  yesCard.tokenDetector = TokenDetector::Asset;
-  yesCard.asset.assetDetector = AssetDetector::Feature2D;
+  SBGCK_ASSERT_THROW(cm.loadFromComponentFile(fm, fileName) == true);
+  SBGCK_ASSERT_THROW(cm.boards.size() == 0);
+  SBGCK_ASSERT_THROW(cm.tokens.size() == 2);
+  SBGCK_ASSERT_THROW(cm.gameName == "Token Test");
 
-  fileName = "assets/card_yes.png";
-  SBGCK_ASSERT_THROW(fm.readVFSData(fileName, data) == true);
-  SBGCK_ASSERT_THROW(data.size() > 0);
+  SBGCK_ASSERT_THROW(cm.getToken("Invalid") == NULL);
+  SBGCK_ASSERT_THROW(cm.getToken("Red Circle") != NULL);
 
-  SBGCK_ASSERT_THROW(cm.loadToken(yesCard,(unsigned char*) data.content(), data.size()) == true);
+  Token *t = NULL;
+
+  t = cm.getToken("Red Circle");
+  SBGCK_ASSERT_THROW(t->asset.getDefault().image.empty() == true);
+  SBGCK_ASSERT_THROW(t->geometry == Geometry::Circle);
+  // RGB = 255,0,0 - BGR = 0,0,255
+  SBGCK_ASSERT_THROW(t->color[0] == 0);
+  SBGCK_ASSERT_THROW(t->color[1] == 0);
+  SBGCK_ASSERT_THROW(t->color[2] == 255);
+
+  t = cm.getToken("Card Yes");
+  SBGCK_ASSERT_THROW(t->asset.getDefault().image.empty() == false);
+  SBGCK_ASSERT_THROW(t->geometry == Geometry::None);
+  // no color
+  SBGCK_ASSERT_THROW(t->color[0] == 0);
+  SBGCK_ASSERT_THROW(t->color[1] == 0);
+  SBGCK_ASSERT_THROW(t->color[2] == 0);
 
   SBGCK_TEST_END();
 }
@@ -65,6 +90,7 @@ void testComponentManagerGameConfig(string baseDir, string dirName)
   SBGCK_ASSERT_THROW(cm.loadFromComponentFile(fm, fileName) == true);
   SBGCK_ASSERT_THROW(cm.boards.size() == 1);
   SBGCK_ASSERT_THROW(cm.tokens.size() == 32);
+  SBGCK_ASSERT_THROW(cm.gameName == "Dev Game");
 
   SBGCK_TEST_END();
 }
@@ -79,6 +105,7 @@ int main(int, char **)
   LOGCFG.headers = true;
   LOGCFG.level = typelog::INFO;
 
-  testComponentManager(baseDir, gameName);
+  testComponentManagerSetBoard(baseDir, gameName);
+  testComponentManagerLoadToken(baseDir, gameName);
   testComponentManagerGameConfig(baseDir, gameName);
 }

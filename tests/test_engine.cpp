@@ -31,6 +31,19 @@ void testEngineLoadGame(string baseDir, string gameName, string assetFileName)
   SBGCK_TEST_END();
 }
 
+void testEngineLoadBoard(string baseDir, string gameName, string assetFileName, string boardName)
+{
+  SBGCK_TEST_BEGIN("testEngineLoadBoard");
+
+  Engine engine;
+  engine.isTesting = true;
+
+  SBGCK_ASSERT_THROW(engine.init(baseDir, assetFileName) == true);
+  SBGCK_ASSERT_THROW(engine.loadBoard(boardName) == true);
+
+  SBGCK_TEST_END();
+}
+
 void testEnginePlaySample(string baseDir, string gameName, string assetFileName)
 {
   SBGCK_TEST_BEGIN("testEnginePlaySample");
@@ -148,6 +161,7 @@ int main(int, char **)
   string baseDir = CMAKE_SOURCE_DIR + string("/tests/games");
   string gameName = "test_engine";
   string frame_png = CMAKE_SOURCE_DIR + string("/tests/images/frame.png");
+  string boardName = "Arctic";
 
   LOGCFG.prefix = (char *)"test_engine";
   LOGCFG.headers = true;
@@ -155,6 +169,7 @@ int main(int, char **)
 
   testEngineInit(baseDir, frame_png);
   testEngineLoadGame(baseDir, gameName, frame_png);
+  testEngineLoadBoard(baseDir, gameName, frame_png, boardName);
   testEnginePlaySample(baseDir, gameName, frame_png);
   testEnginePlaySampleSync(baseDir, gameName, frame_png);
   testEnginePlaySampleSyncTranslated(baseDir, gameName, frame_png);

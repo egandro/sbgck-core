@@ -64,7 +64,7 @@ namespace SBGCK
         // Core Engine API
         //////////////////////////////////////////
 
-        bool loadBoard(string boardName);
+        bool setBoard(string boardName);
         bool playSample(string sampleName);
         bool playSampleSync(string sampleName, bool isLocalized);
         bool stopAllAudio();

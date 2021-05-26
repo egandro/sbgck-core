@@ -1,0 +1,15 @@
+{
+  "map": [
+    {
+      "shape": "poly",
+      "coords": "146,278,149,488,235,488,234,289,220,278",
+      "area": "#my poly"
+    },
+    {
+      "shape": "rect",
+      "coords": "249,376,489,587",
+      "area": "#my rect"
+    }
+  ],
+  "name": "Board Test 2"
+}

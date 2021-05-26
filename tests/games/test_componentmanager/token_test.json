@@ -1,0 +1,15 @@
+{
+    "name": "Token Test",
+    "boards": [],
+    "tokens": [
+        {
+            "name": "Red Circle",
+            "geometry": "Circle",
+            "color": "255,0,0"
+        },
+        {
+            "name": "Card Yes",
+            "asset": "card_yes.png"
+        }
+    ]
+}

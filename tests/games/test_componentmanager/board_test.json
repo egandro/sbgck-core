@@ -1,0 +1,21 @@
+{
+    "name": "Board Test",
+    "boards": [
+        {
+            "name": "Arctic",
+            "asset": "Arctic-base.png",
+            "map": "Arctic-base.json"
+        },
+        {
+            "name": "Board Test 1",
+            "asset": "Arctic-base.png",
+            "map": "board_test_1.json"
+        },
+        {
+            "name": "Board Test 2",
+            "asset": "Arctic-base.png",
+            "map": "board_test_2.json"
+        }
+    ],
+    "tokens": []
+}

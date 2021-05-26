@@ -30,16 +30,30 @@ bool Engine::loadGame(string gameName, string lang)
 
     if (!fileManager.openVFS(gameName))
     {
-        Log(typelog::INFO) << "Engine loadGame - openVFS failed";
+        Log(typelog::INFO) << "Engine loadGame - fileManager.openVFS failed";
+        return false;
+    }
+
+    string fileName = "gameconfig.json";
+    if (!componentManager.loadFromComponentFile(fileManager, fileName))
+    {
+        Log(typelog::INFO) << "Engine loadGame - componentManager.loadFromComponentFile - " << fileName << " - failed";
         return false;
     }
 
     return true;
 }
 
-bool Engine::loadBoard(string boardName)
+bool Engine::setBoard(string boardName)
 {
-    Log(typelog::INFO) << "Engine loadBoard: " << boardName;
+    Log(typelog::INFO) << "Engine setBoard: " << boardName;
+
+    if (!componentManager.setBoard(boardName, false))
+    {
+        Log(typelog::INFO) << "Engine setBoard - componentManager.setBoard - " << boardName << " - failed";
+        return false;
+    }
+
     return false;
 }
 

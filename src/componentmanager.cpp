@@ -4,15 +4,24 @@
 
 using namespace SBGCK;
 
-bool ComponentManager::loadBoard(const unsigned char *imageData,
-                                 const int imageDataLen,
-                                 string boardMapJson, string boardName)
+void ComponentManager::reset()
 {
-    Log(typelog::INFO) << "ComponentManager loadBoard";
+    // Log(typelog::INFO) << "ComponentManager reset ";
+    Log(typelog::WARN) << "ComponentManager reset - NOT implemented";
+
+    gameName = "";
+    currentBoard = NULL;
+}
+
+bool ComponentManager::readBoardData(const unsigned char *imageData,
+                                     const int imageDataLen,
+                                     string boardMapJson, string boardName)
+{
+    Log(typelog::INFO) << "ComponentManager readBoardData";
     Asset asset(imageData, imageDataLen);
     if (asset.getDefault().image.empty())
     {
-        Log(typelog::ERR) << "ComponentManager loadBoard - asset invalid";
+        Log(typelog::ERR) << "ComponentManager readBoardData - asset invalid";
         return false;
     }
 
@@ -23,7 +32,7 @@ bool ComponentManager::loadBoard(const unsigned char *imageData,
     {
         if (!board.roiManager.initFromJsonString(boardMapJson))
         {
-            Log(typelog::ERR) << "ComponentManager loadBoard - boardMapJson invalid";
+            Log(typelog::ERR) << "ComponentManager readBoardData - boardMapJson invalid";
             return false;
         }
     }
@@ -33,17 +42,17 @@ bool ComponentManager::loadBoard(const unsigned char *imageData,
     return true;
 }
 
-bool ComponentManager::loadToken(Token &token, const unsigned char *imageData,
-                                 const int imageDataLen)
+bool ComponentManager::readTokenData(Token &token, const unsigned char *imageData,
+                                     const int imageDataLen)
 {
-    Log(typelog::INFO) << "ComponentManager loadToken";
+    Log(typelog::INFO) << "ComponentManager readTokenData";
 
     if (imageData != NULL && imageDataLen > 0)
     {
         Asset asset(imageData, imageDataLen);
         if (asset.getDefault().image.empty())
         {
-            Log(typelog::ERR) << "ComponentManager loadToken - asset invalid";
+            Log(typelog::ERR) << "ComponentManager readTokenData - asset invalid";
             return false;
         }
         token.asset = asset;
@@ -61,8 +70,9 @@ bool ComponentManager::loadToken(Token &token, const unsigned char *imageData,
 
 bool ComponentManager::loadFromComponentFile(FileManager &fm, string gameConfigJsonFile)
 {
-
     Log(typelog::INFO) << "ComponentManager loadFromComponentFile";
+
+    reset();
 
     string jsonStr = fm.readVFSString(gameConfigJsonFile);
     if (jsonStr.empty())
@@ -72,6 +82,11 @@ bool ComponentManager::loadFromComponentFile(FileManager &fm, string gameConfigJ
     }
 
     nlohmann::json j = nlohmann::json::parse(jsonStr.c_str());
+
+    if (!j["name"].empty())
+    {
+        gameName = j["name"].get<std::string>();
+    }
 
     if (!j["boards"].empty())
     {
@@ -110,7 +125,7 @@ bool ComponentManager::loadFromComponentFile(FileManager &fm, string gameConfigJ
                 return false;
             }
 
-            if (!loadBoard((unsigned char *)data.content(), data.size(), map, name))
+            if (!readBoardData((unsigned char *)data.content(), data.size(), map, name))
             {
                 Log(typelog::ERR) << "ComponentManager loadFromComponentFile - board loadBoard failed";
                 return false;
@@ -206,7 +221,7 @@ bool ComponentManager::loadFromComponentFile(FileManager &fm, string gameConfigJ
                 }
             }
 
-            if (!loadToken(token, (unsigned char *)data.content(), data.size()))
+            if (!readTokenData(token, (unsigned char *)data.content(), data.size()))
             {
                 Log(typelog::ERR) << "ComponentManager loadFromComponentFile - token loadToken failed";
                 return false;
@@ -216,4 +231,25 @@ bool ComponentManager::loadFromComponentFile(FileManager &fm, string gameConfigJ
         }
     }
     return true;
+}
+
+bool ComponentManager::setBoard(string boardName, bool resetEmptyFrame)
+{
+    Log(typelog::INFO) << "ComponentManager setBoard " << boardName << " reset empty frame " << resetEmptyFrame;
+    currentBoard = NULL;
+
+    for (std::size_t i = 0; i < boards.size(); ++i)
+    {
+        Board *board = &(boards[i]);
+        if (board->name == boardName)
+        {
+            currentBoard = board;
+            if(resetEmptyFrame) {
+                currentBoard->frameBoardEmpty = Mat();
+            }
+            return true;
+        }
+    }
+
+    return false;
 }
