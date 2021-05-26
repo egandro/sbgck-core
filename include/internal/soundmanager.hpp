@@ -16,14 +16,17 @@ namespace SBGCK
     public:
         SoLoud::Soloud soloud;
 
-        bool init(bool testing=false)
+        bool init(bool testing = false)
         {
             int res;
 
             // keep this simple for now
-            if(testing) {
+            if (testing)
+            {
                 res = soloud.init(SoLoud::Soloud::CLIP_ROUNDOFF, SoLoud::Soloud::NOSOUND);
-            } else {
+            }
+            else
+            {
                 res = soloud.init();
             }
 
@@ -32,7 +35,8 @@ namespace SBGCK
 
         void testingWait();
 
-        void stopAll() {
+        void stopAll()
+        {
             soloud.stopAll();
         }
 
@@ -60,6 +64,8 @@ namespace SBGCK
         bool load(FileManager &fm, Sample &desc);
         bool play();
         bool stop();
+
+        int getHandle() { return handle; }
     };
 }
 

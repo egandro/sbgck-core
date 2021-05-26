@@ -1,4 +1,5 @@
 #include "sbgck.hpp"
+#include <soloud/soloud_thread.h>
 
 using namespace SBGCK;
 
@@ -14,10 +15,10 @@ bool Engine::init(string applicationDir, string url)
     if (!fileManager.init(applicationDir))
         return false;
 
-    if (!soundManager.init(isTesting))
+    if (!soundManager.init(isAudioTesting))
         return false;
 
-    if (!cameraManager.init(url, isTesting))
+    if (!cameraManager.init(url, isCameraTesting))
         return false;
 
     return true;
@@ -54,19 +55,58 @@ bool Engine::setBoard(string boardName)
         return false;
     }
 
-    return false;
+    return true;
 }
 
 bool Engine::playSample(string sampleName)
 {
     Log(typelog::INFO) << "Engine playSample: " << sampleName;
-    return false;
+
+    Sample desc;
+    desc.fileName = "audio/" + sampleName;
+
+    SampleVFS sample(&soundManager);
+    if (!sample.load(fileManager, desc))
+    {
+        Log(typelog::ERR) << "SampleVFS load failed " << sampleName;
+        return false;
+    }
+
+    return sample.play();
 }
 
 bool Engine::playSampleSync(string sampleName, bool isLocalized)
 {
     Log(typelog::INFO) << "Engine playSampleSync: " << sampleName << isLocalized;
-    return false;
+
+    Sample desc;
+    desc.fileName = "audio/" + sampleName;
+    if(isLocalized) {
+        desc.fileName = "audio/" + language + "/" + sampleName;
+    }
+    desc.loop = false; // MUST be false
+
+    SampleVFS sample(&soundManager);
+    if (!sample.load(fileManager, desc))
+    {
+        Log(typelog::ERR) << "SampleVFS load failed " << sampleName;
+        return false;
+    }
+
+    if (!sample.play())
+    {
+        return false;
+    }
+
+    while (soundManager.soloud.isValidVoiceHandle(sample.getHandle()))
+    {
+        // wait consume some time
+        SoLoud::Thread::sleep(100);
+        // MUST be false - we do an active CPU hold here (may be bad...)
+        desc.loop = false;
+    }
+
+    return true;
 }
 
 bool Engine::stopAllAudio()

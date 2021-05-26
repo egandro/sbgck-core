@@ -1,17 +1,22 @@
+#include <chrono>
 #include "base.hpp"
 #include <sbgck_opencv/log.hpp>
+#include <soloud/soloud_thread.h>
 #include "sbgck.hpp"
 
 using namespace SBGCK;
 
 structlog LOGCFG = {};
 
+#define SILENT_TEST_SOUND false
+
 void testEngineInit(string baseDir, string assetFileName)
 {
   SBGCK_TEST_BEGIN("testEngineInit");
 
   Engine engine;
-  engine.isTesting = true;
+  engine.isAudioTesting = SILENT_TEST_SOUND;
+  engine.isCameraTesting = true;
 
   SBGCK_ASSERT_THROW(engine.init(baseDir, assetFileName) == true);
 
@@ -23,7 +28,8 @@ void testEngineLoadGame(string baseDir, string gameName, string assetFileName)
   SBGCK_TEST_BEGIN("testEngineLoadGame");
 
   Engine engine;
-  engine.isTesting = true;
+  engine.isAudioTesting = SILENT_TEST_SOUND;
+  engine.isCameraTesting = true;
 
   SBGCK_ASSERT_THROW(engine.init(baseDir, assetFileName) == true);
   SBGCK_ASSERT_THROW(engine.loadGame(gameName, "en") == true);
@@ -31,15 +37,17 @@ void testEngineLoadGame(string baseDir, string gameName, string assetFileName)
   SBGCK_TEST_END();
 }
 
-void testEngineLoadBoard(string baseDir, string gameName, string assetFileName, string boardName)
+void testEngineSetBoard(string baseDir, string gameName, string assetFileName, string boardName)
 {
-  SBGCK_TEST_BEGIN("testEngineLoadBoard");
+  SBGCK_TEST_BEGIN("testEngineSetBoard");
 
   Engine engine;
-  engine.isTesting = true;
+  engine.isAudioTesting = SILENT_TEST_SOUND;
+  engine.isCameraTesting = true;
 
   SBGCK_ASSERT_THROW(engine.init(baseDir, assetFileName) == true);
-  SBGCK_ASSERT_THROW(engine.loadBoard(boardName) == true);
+  SBGCK_ASSERT_THROW(engine.loadGame(gameName, "en") == true);
+  SBGCK_ASSERT_THROW(engine.setBoard(boardName) == true);
 
   SBGCK_TEST_END();
 }
@@ -49,7 +57,8 @@ void testEnginePlaySample(string baseDir, string gameName, string assetFileName)
   SBGCK_TEST_BEGIN("testEnginePlaySample");
 
   Engine engine;
-  engine.isTesting = true;
+  engine.isAudioTesting = SILENT_TEST_SOUND;
+  engine.isCameraTesting = true;
 
   SBGCK_ASSERT_THROW(engine.init(baseDir, assetFileName) == true);
   SBGCK_ASSERT_THROW(engine.loadGame(gameName, "en") == true);
@@ -63,7 +72,8 @@ void testEnginePlaySampleSync(string baseDir, string gameName, string assetFileN
   SBGCK_TEST_BEGIN("testEnginePlaySampleSync");
 
   Engine engine;
-  engine.isTesting = true;
+  engine.isAudioTesting = SILENT_TEST_SOUND;
+  engine.isCameraTesting = true;
 
   SBGCK_ASSERT_THROW(engine.init(baseDir, assetFileName) == true);
   SBGCK_ASSERT_THROW(engine.loadGame(gameName, "en") == true);
@@ -77,7 +87,8 @@ void testEnginePlaySampleSyncTranslated(string baseDir, string gameName, string 
   SBGCK_TEST_BEGIN("testEnginePlaySampleSyncTranslated");
 
   Engine engine;
-  engine.isTesting = true;
+  engine.isAudioTesting = SILENT_TEST_SOUND;
+  engine.isCameraTesting = true;
 
   SBGCK_ASSERT_THROW(engine.init(baseDir, assetFileName) == true);
   SBGCK_ASSERT_THROW(engine.loadGame(gameName, "en") == true);
@@ -99,14 +110,34 @@ void testEngineStopAllAudio(string baseDir, string gameName, string assetFileNam
   SBGCK_TEST_BEGIN("testEngineStopAllAudio");
 
   Engine engine;
-  engine.isTesting = true;
+  engine.isAudioTesting = SILENT_TEST_SOUND;
+  engine.isCameraTesting = true;
 
   SBGCK_ASSERT_THROW(engine.init(baseDir, assetFileName) == true);
   SBGCK_ASSERT_THROW(engine.loadGame(gameName, "en") == true);
-  SBGCK_ASSERT_THROW(engine.playSample("Ove - Earth Is All We Have .ogg") == true);
+  //SBGCK_ASSERT_THROW(engine.playSample("Ove - Earth Is All We Have .ogg") == true);
+  SBGCK_ASSERT_THROW(engine.playSample("tetsno.ogg") == true);
 
-  // sleep what so ever....
-  // TODO
+#if SILENT_TEST_SOUND == false
+  // https://stackoverflow.com/questions/19555121/how-to-get-current-timestamp-in-milliseconds-since-1970-just-the-way-java-gets
+  unsigned __int64 end =
+    std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+
+  end += 1000 * 20; // 10 sec
+
+  while (true)
+  {
+    unsigned __int64 now =
+      std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+
+    if(now > end) {
+      break;
+    }
+
+    // wait consume some time
+    SoLoud::Thread::sleep(100);
+  }
+#endif
 
   SBGCK_ASSERT_THROW(engine.stopAllAudio() == true);
 
@@ -118,7 +149,8 @@ void testEngineCalibrateReferenceFrame(string baseDir, string gameName, string a
   SBGCK_TEST_BEGIN("testEngineCalibrateReferenceFrame");
 
   Engine engine;
-  engine.isTesting = true;
+  engine.isAudioTesting = SILENT_TEST_SOUND;
+  engine.isCameraTesting = true;
 
   SBGCK_ASSERT_THROW(engine.init(baseDir, assetFileName) == true);
   SBGCK_ASSERT_THROW(engine.loadGame(gameName, "en") == true);
@@ -132,7 +164,8 @@ void testEngineDetectColorCalibrationCard(string baseDir, string gameName, strin
   SBGCK_TEST_BEGIN("testEngineDetectColorCalibrationCard");
 
   Engine engine;
-  engine.isTesting = true;
+  engine.isAudioTesting = SILENT_TEST_SOUND;
+  engine.isCameraTesting = true;
 
   SBGCK_ASSERT_THROW(engine.init(baseDir, assetFileName) == true);
   SBGCK_ASSERT_THROW(engine.loadGame(gameName, "en") == true);
@@ -146,7 +179,8 @@ void testEngineQueryTokens(string baseDir, string gameName, string assetFileName
   SBGCK_TEST_BEGIN("testEngineQueryTokens");
 
   Engine engine;
-  engine.isTesting = true;
+  engine.isAudioTesting = SILENT_TEST_SOUND;
+  engine.isCameraTesting = true;
 
   SBGCK_ASSERT_THROW(engine.init(baseDir, assetFileName) == true);
   SBGCK_ASSERT_THROW(engine.loadGame(gameName, "en") == true);
@@ -167,12 +201,12 @@ int main(int, char **)
   LOGCFG.headers = true;
   LOGCFG.level = typelog::INFO;
 
-  testEngineInit(baseDir, frame_png);
-  testEngineLoadGame(baseDir, gameName, frame_png);
-  testEngineLoadBoard(baseDir, gameName, frame_png, boardName);
-  testEnginePlaySample(baseDir, gameName, frame_png);
-  testEnginePlaySampleSync(baseDir, gameName, frame_png);
-  testEnginePlaySampleSyncTranslated(baseDir, gameName, frame_png);
+  // testEngineInit(baseDir, frame_png);
+  // testEngineLoadGame(baseDir, gameName, frame_png);
+  // testEngineSetBoard(baseDir, gameName, frame_png, boardName);
+  // testEnginePlaySample(baseDir, gameName, frame_png);
+  // testEnginePlaySampleSync(baseDir, gameName, frame_png);
+  // testEnginePlaySampleSyncTranslated(baseDir, gameName, frame_png);
   testEngineStopAllAudio(baseDir, gameName, frame_png);
   testEngineCalibrateReferenceFrame(baseDir, gameName, frame_png);
   testEngineDetectColorCalibrationCard(baseDir, gameName, frame_png);

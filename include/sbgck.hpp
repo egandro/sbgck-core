@@ -46,10 +46,11 @@ namespace SBGCK
         void queryTokens(QueryTokenParam &param, QueryTokenResult &result);
 
     public:
-        bool isTesting;
+        bool isAudioTesting;
+        bool isCameraTesting;
 
         Engine()
-            : isTesting(false)
+            : isAudioTesting(false), isCameraTesting(false)
         {
         }
 
