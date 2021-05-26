@@ -91,6 +91,7 @@
         "xutility": "cpp",
         "regex": "cpp",
         "xmemory0": "cpp",
-        "filesystem": "cpp"
+        "filesystem": "cpp",
+        "assetsys.h": "c"
     }
 }

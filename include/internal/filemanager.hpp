@@ -1,7 +1,11 @@
 #ifndef _FileManager_HPP
 #define _FileManager_HPP
 
+extern "C"
+{
 #include <libs/assetsys.h>
+}
+
 #include <string>
 #include <sbgck_opencv/log.hpp>
 
