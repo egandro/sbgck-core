@@ -73,7 +73,8 @@ void SoundManager::stopAll(int fadeOutTime)
 
     soloud.fadeGlobalVolume(0.0f, fadeOutTime);
 
-    if(!isTesting && fadeOutTime > 0) {
+    if (!isTesting && fadeOutTime > 0)
+    {
         // no delay on testing
         SoLoud::Thread::sleep(1000 * (fadeOutTime + 2));
     }
@@ -121,11 +122,14 @@ bool SoundManager::playSync(FileManager &fm, string fileName)
 
     sample.handle = soloud.play(*(sample.wav));
 
-    while (soloud.isValidVoiceHandle(sample.handle))
+    if (!isTesting)
     {
-        // wait consume some time
-        SoLoud::Thread::sleep(100);
-        // we do an active CPU hold here (may be bad...)
+        while (soloud.isValidVoiceHandle(sample.handle))
+        {
+            // wait consume some time
+            SoLoud::Thread::sleep(100);
+            // we do an active CPU hold here (may be bad...)
+        }
     }
 
     return true;

@@ -1,5 +1,6 @@
 #include "sbgck.hpp"
 #include <soloud/soloud_thread.h>
+#include <sbgck_opencv/detector.hpp>
 
 using namespace SBGCK;
 
@@ -90,13 +91,44 @@ bool Engine::stopAllAudio()
 bool Engine::calibrateReferenceFrame()
 {
     Log(typelog::INFO) << "Engine calibrateReferenceFrame";
-    return false;
+
+    if (componentManager.currentBoard == NULL)
+    {
+        Log(typelog::INFO) << "ComponentManager has no currentBoard - use setBoard()";
+        return false;
+    }
+
+    // empty the frame
+    componentManager.currentBoard->frameBoardEmpty = Mat();
+
+    if (componentManager.currentBoard->asset.getDefault().image.empty())
+    {
+        Log(typelog::INFO) << "ComponentManager default board as no asset";
+        return false;
+    }
+
+    Mat frame;
+    if (!cameraManager.getFrame(frame))
+    {
+        return false;
+    }
+
+    if(!isCameraTesting && isCameraDebugging) {
+
+    }
+
+    if(!Detector::calibrateReferenceFrame(frame, *(componentManager.currentBoard))) {
+        Log(typelog::INFO) << "Detector calibrateReferenceFrame failed";
+    }
+
+    return true;
 }
 
 bool Engine::detectColorCalibrationCard()
 {
     Log(typelog::INFO) << "Engine calibrateReferenceFrame";
-    return false;
+    Log(typelog::WARN) << " detectColorCalibrationCard NOT IMPLEMENTED";
+    return true;
 }
 
 string Engine::queryTokens(string json)

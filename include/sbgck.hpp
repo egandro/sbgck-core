@@ -48,6 +48,7 @@ namespace SBGCK
     public:
         bool isAudioTesting;
         bool isCameraTesting;
+        bool isCameraDebugging;
 
         Engine()
             : isAudioTesting(false), isCameraTesting(false)
