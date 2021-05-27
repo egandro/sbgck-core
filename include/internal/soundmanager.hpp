@@ -73,10 +73,7 @@ namespace SBGCK
             return res == SoLoud::SO_NO_ERROR;
         }
 
-        void stopAll()
-        {
-            soloud.stopAll();
-        }
+        void stopAll();
 
         bool play(FileManager &fm, string fileName);
 

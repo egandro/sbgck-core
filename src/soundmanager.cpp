@@ -65,6 +65,13 @@ void SoundManager::cleanStopped()
     }
 }
 
+void SoundManager::stopAll()
+{
+    Log(typelog::INFO) << "SoundManager stopAll";
+    soloud.stopAll();
+    cleanStopped();
+}
+
 bool SoundManager::play(FileManager &fm, string fileName)
 {
     Log(typelog::INFO) << "SoundManager play " << fileName;
