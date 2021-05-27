@@ -1,36 +1,21 @@
-#include <soloud/soloud_thread.h>
 #include "internal/soundmanager.hpp"
+#include <soloud/soloud_thread.h>
 
 using namespace SBGCK;
 
-void SoundManager::testingWait()
+bool Sample::load(FileManager &fm, string fileName)
 {
-    // Wait until sounds have finished
-    while (soloud.getActiveVoiceCount() > 0)
-    {
-        // Still going, sleep for a bit
-        SoLoud::Thread::sleep(100);
-    }
-}
+    Log(typelog::INFO) << "Sample load";
 
-    VFSData dataX;
-bool SampleVFS::load(FileManager &fm, Sample &desc)
-{
-    Log(typelog::INFO) << "SampleVFS load";
-
-    if (handle != 0)
+    VFSData data;
+    if (!fm.readVFSData(fileName, data))
     {
-        sm->soloud.stop(handle);
-        handle = 0;
-    }
-
-    if (!fm.readVFSData(desc.fileName, dataX))
-    {
-        Log(typelog::ERR) << "SampleVFS load failed";
+        Log(typelog::ERR) << "Sample load failed";
         return false;
     }
 
-    if(wav!=NULL) {
+    if (wav != NULL)
+    {
         delete wav;
     }
 
@@ -38,72 +23,91 @@ bool SampleVFS::load(FileManager &fm, Sample &desc)
     wav = new SoLoud::Wav();
 
     // copy data to wav-> the wave will also free the ram
-    loaded = wav->loadMem((const unsigned char *)dataX.content(), dataX.size(), true) == SoLoud::SO_NO_ERROR;
+    bool loaded = wav->loadMem((const unsigned char *)data.content(), data.size(), true) == SoLoud::SO_NO_ERROR;
     if (!loaded)
     {
-        Log(typelog::ERR) << "SampleVFS load failed";
+        Log(typelog::ERR) << "Sample load failed";
         return false;
     }
-
-    wav->setLooping(desc.loop.get());
-
-    // save init volumes
-    initVolume = desc.volume.get();
-    initPan  = desc.pan.get();
-
-    // we go on signal/slots here
-    desc.loop.on_change().connect([this](bool value) {
-        wav->setLooping(value);
-        if (handle != 0)
-        {
-            sm->soloud.setLooping(handle, value);
-        }
-    });
-
-    desc.volume.on_change().connect([this](float value) {
-        initVolume = value;
-        if (handle != 0)
-        {
-            sm->soloud.setVolume(handle, value);
-        }
-    });
-
-    desc.pan.on_change().connect([this](float value) {
-        initPan = value;
-        if (handle != 0)
-        {
-            sm->soloud.setPan(handle, value);
-        }
-    });
 
     return true;
 }
 
-bool SampleVFS::play()
+void SoundManager::cleanStopped()
 {
-    Log(typelog::INFO) << "SampleVFS play";
 
-    if (!loaded)
+    Log(typelog::INFO) << "SoundManager cleanStopped";
+
+    vector<Sample *> deleteList;
+
+    for (std::size_t i = 0; i < samples.size(); ++i)
     {
-        Log(typelog::ERR) << "SampleVFS play no sample loaded";
+        Sample *sample = samples[i];
+        if (!soloud.isValidVoiceHandle(sample->handle))
+        {
+            deleteList.push_back(sample);
+        }
+    }
+
+    for (std::size_t k = 0; k < deleteList.size(); ++k)
+    {
+        Sample *sample = deleteList[k];
+
+        for (std::size_t i = 0; i < samples.size(); ++i)
+        {
+            if (sample == samples[i])
+            {
+                delete sample;
+                samples.erase(samples.begin()+(int)i);
+                break;
+            }
+        }
+    }
+}
+
+bool SoundManager::play(FileManager &fm, string fileName)
+{
+    Log(typelog::INFO) << "SoundManager play " << fileName;
+
+    cleanStopped(); // we have time to do this
+
+    Sample *sample = new Sample();
+
+    if (!sample->load(fm, fileName))
+    {
+        Log(typelog::ERR) << "Sample load failed";
+        delete sample;
         return false;
     }
 
-    handle = sm->soloud.play(*wav, initVolume, initPan);
+    sample->handle = soloud.play(*(sample->wav));
+    samples.push_back(sample);
 
     return true;
 }
 
-bool SampleVFS::stop()
+bool SoundManager::playSync(FileManager &fm, string fileName)
 {
-    Log(typelog::INFO) << "SampleVFS stop";
+    Log(typelog::INFO) << "SoundManager play " << fileName;
 
-    if (!loaded)
+    cleanStopped(); // we have time to do this
+
+    Sample sample;
+
+    if (!sample.load(fm, fileName))
     {
-        Log(typelog::ERR) << "SampleVFS play stop sample loaded";
+        Log(typelog::ERR) << "Sample load failed";
         return false;
     }
 
-    sm->soloud.stop(handle);
+    sample.handle = soloud.play(*(sample.wav));
+
+    while (soloud.isValidVoiceHandle(sample.handle))
+    {
+        // wait consume some time
+        SoLoud::Thread::sleep(100);
+        // we do an active CPU hold here (may be bad...)
+    }
+
     return true;
 }

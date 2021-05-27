@@ -2,19 +2,59 @@
 #define _SOUNDMANAGER_HPP
 
 #include <string>
+#include <vector>
 #include <sbgck_opencv/log.hpp>
 #include <soloud/soloud.h>
 #include <soloud/soloud_wav.h>
 
 #include "filemanager.hpp"
-#include "entities.hpp"
 
 namespace SBGCK
 {
+    class Sample
+    {
+        Sample(const Sample &value) { }
+    public:
+        SoLoud::Wav *wav;
+        int handle;
+
+        Sample() : wav(NULL), handle(0)
+        {
+        }
+
+        virtual ~Sample()
+        {
+            if (wav != NULL)
+            {
+                delete wav;
+                wav = NULL;
+            }
+        }
+
+        bool load(FileManager &sm, string fileName);
+    };
+
     class SoundManager
     {
+        vector<Sample*> samples;
+        void cleanStopped();
+
     public:
         SoLoud::Soloud soloud;
+
+        ~SoundManager()
+        {
+            for (std::size_t i = 0; i < samples.size(); ++i)
+            {
+                Sample *sample = samples[i];
+                delete sample;
+            }
+
+            samples.clear();
+
+            // Clean up SoLoud
+            soloud.deinit();
+        }
 
         bool init(bool testing = false)
         {
@@ -33,49 +73,16 @@ namespace SBGCK
             return res == SoLoud::SO_NO_ERROR;
         }
 
-        void testingWait();
-
         void stopAll()
         {
             soloud.stopAll();
         }
 
-        ~SoundManager()
-        {
-            // Clean up SoLoud
-            soloud.deinit();
-        }
+        bool play(FileManager &fm, string fileName);
+
+        bool playSync(FileManager &fm, string fileName);
     };
 
-    class SampleVFS
-    {
-        SoLoud::Wav *wav;
-        float initPan;
-        float initVolume;
-        bool loaded;
-        int handle;
-        SoundManager *sm;
-
-        SampleVFS(const SampleVFS &value) {}
-
-    public:
-        SampleVFS(SoundManager *sm) : wav(NULL), initPan(0.0f), initVolume(1.0f), loaded(false), handle(0), sm(sm) {}
-
-        virtual ~SampleVFS()
-        {
-            if (wav != NULL)
-            {
-                delete wav;
-                wav = NULL;
-            }
-        }
-
-        bool load(FileManager &fm, Sample &desc);
-        bool play();
-        bool stop();
-
-        int getHandle() { return handle; }
-    };
 }
 
 #endif

@@ -63,51 +63,21 @@ bool Engine::playSample(string sampleName)
 {
     Log(typelog::INFO) << "Engine playSample: " << sampleName;
 
-    Sample desc;
-    desc.fileName = "audio/" + sampleName;
+    string fileName = "audio/" + sampleName;
 
-    SampleVFS sample(&soundManager);
-    if (!sample.load(fileManager, desc))
-    {
-        Log(typelog::ERR) << "SampleVFS load failed " << sampleName;
-        return false;
-    }
-
-    return sample.play();
+    return soundManager.play(fileManager, fileName);
 }
 
 bool Engine::playSampleSync(string sampleName, bool isLocalized)
 {
     Log(typelog::INFO) << "Engine playSampleSync: " << sampleName << isLocalized;
 
-    Sample desc;
-    desc.fileName = "audio/" + sampleName;
+    string fileName = "audio/" + sampleName;
     if(isLocalized) {
-        desc.fileName = "audio/" + language + "/" + sampleName;
-    }
-    desc.loop = false; // MUST be false
-
-    SampleVFS sample(&soundManager);
-    if (!sample.load(fileManager, desc))
-    {
-        Log(typelog::ERR) << "SampleVFS load failed " << sampleName;
-        return false;
+        fileName = "audio/" + language + "/" + sampleName;
     }
 
-    if (!sample.play())
-    {
-        return false;
-    }
-
-    while (soundManager.soloud.isValidVoiceHandle(sample.getHandle()))
-    {
-        // wait consume some time
-        SoLoud::Thread::sleep(100);
-        // MUST be false - we do an active CPU hold here (may be bad...)
-        desc.loop = false;
-    }
-
-    return true;
+    return soundManager.playSync(fileManager, fileName);
 }
 
 bool Engine::stopAllAudio()

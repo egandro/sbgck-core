@@ -119,14 +119,14 @@ void testEngineStopAllAudio(string baseDir, string gameName, string assetFileNam
 
 #if SILENT_TEST_SOUND == false
   // https://stackoverflow.com/questions/19555121/how-to-get-current-timestamp-in-milliseconds-since-1970-just-the-way-java-gets
-  unsigned __int64 end =
+  uint64_t end =
     std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 
   end += 1000 * 10; // 10 sec
 
   while (true)
   {
-    unsigned __int64 now =
+    uint64_t now =
       std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 
     if(now > end) {
@@ -200,12 +200,12 @@ int main(int, char **)
   LOGCFG.headers = true;
   LOGCFG.level = typelog::INFO;
 
-  // testEngineInit(baseDir, frame_png);
-  // testEngineLoadGame(baseDir, gameName, frame_png);
-  // testEngineSetBoard(baseDir, gameName, frame_png, boardName);
-  // testEnginePlaySample(baseDir, gameName, frame_png);
-  // testEnginePlaySampleSync(baseDir, gameName, frame_png);
-  // testEnginePlaySampleSyncTranslated(baseDir, gameName, frame_png);
+  testEngineInit(baseDir, frame_png);
+  testEngineLoadGame(baseDir, gameName, frame_png);
+  testEngineSetBoard(baseDir, gameName, frame_png, boardName);
+  testEnginePlaySample(baseDir, gameName, frame_png);
+  testEnginePlaySampleSync(baseDir, gameName, frame_png);
+  testEnginePlaySampleSyncTranslated(baseDir, gameName, frame_png);
   testEngineStopAllAudio(baseDir, gameName, frame_png);
   testEngineCalibrateReferenceFrame(baseDir, gameName, frame_png);
   testEngineDetectColorCalibrationCard(baseDir, gameName, frame_png);

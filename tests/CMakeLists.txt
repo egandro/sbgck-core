@@ -73,6 +73,6 @@ endmacro (create_test)
 
 #create_test(test_cameramanager)
 #create_test(test_componentmanager)
-#create_test(test_engine)
+create_test(test_engine)
 #create_test(test_filemanager)
-create_test(test_soundmanager)
+#create_test(test_soundmanager)
