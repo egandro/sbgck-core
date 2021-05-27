@@ -38,12 +38,12 @@ namespace SBGCK
     {
         vector<Sample*> samples;
         void cleanStopped();
+        bool isTesting;
 
-    public:
-        SoLoud::Soloud soloud;
+        void cleanUp() {
+            stopAll(0);
 
-        ~SoundManager()
-        {
+            // free resources
             for (std::size_t i = 0; i < samples.size(); ++i)
             {
                 Sample *sample = samples[i];
@@ -56,9 +56,25 @@ namespace SBGCK
             soloud.deinit();
         }
 
+    public:
+        SoLoud::Soloud soloud;
+
+        SoundManager()
+            : isTesting(false) {
+
+        }
+
+        virtual ~SoundManager()
+        {
+            cleanUp();
+        }
+
         bool init(bool testing = false)
         {
+            isTesting = testing;
             int res;
+
+            cleanUp();
 
             // keep this simple for now
             if (testing)
@@ -73,7 +89,7 @@ namespace SBGCK
             return res == SoLoud::SO_NO_ERROR;
         }
 
-        void stopAll();
+        void stopAll(int fadeOutTime=5);
 
         bool play(FileManager &fm, string fileName);
 

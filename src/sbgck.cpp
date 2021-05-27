@@ -58,7 +58,6 @@ bool Engine::setBoard(string boardName)
     return true;
 }
 
-
 bool Engine::playSample(string sampleName)
 {
     Log(typelog::INFO) << "Engine playSample: " << sampleName;
@@ -73,7 +72,8 @@ bool Engine::playSampleSync(string sampleName, bool isLocalized)
     Log(typelog::INFO) << "Engine playSampleSync: " << sampleName << isLocalized;
 
     string fileName = "audio/" + sampleName;
-    if(isLocalized) {
+    if (isLocalized)
+    {
         fileName = "audio/" + language + "/" + sampleName;
     }
 

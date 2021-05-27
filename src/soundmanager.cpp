@@ -58,18 +58,30 @@ void SoundManager::cleanStopped()
             if (sample == samples[i])
             {
                 delete sample;
-                samples.erase(samples.begin()+(int)i);
+                samples.erase(samples.begin() + (int)i);
                 break;
             }
         }
     }
 }
 
-void SoundManager::stopAll()
+void SoundManager::stopAll(int fadeOutTime)
 {
     Log(typelog::INFO) << "SoundManager stopAll";
+
+    float volume = soloud.getGlobalVolume();
+
+    soloud.fadeGlobalVolume(0.0f, fadeOutTime);
+
+    if(!isTesting && fadeOutTime > 0) {
+        // no delay on testing
+        SoLoud::Thread::sleep(1000 * (fadeOutTime + 2));
+    }
+
     soloud.stopAll();
     cleanStopped();
+
+    soloud.setGlobalVolume(volume); // restore original volume
 }
 
 bool SoundManager::play(FileManager &fm, string fileName)
