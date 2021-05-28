@@ -9,7 +9,7 @@ using namespace SBGCK;
 structlog LOGCFG = {};
 
 #define SILENT_TEST_SOUND true
-#define REAL_CAMERA true
+#define REAL_CAMERA false
 #define CAMERA_DEBUGGING true
 
 void testEngineInit(string baseDir, string camera)
@@ -208,7 +208,7 @@ int main(int, char **)
 {
   SBGCK_TEST_INIT();
   string baseDir = CMAKE_SOURCE_DIR + string("/tests/games");
-  string gameName = "test_engine";
+  string gameName = "test_engine_no_camera";
   string camera = "";
   string frame_png = CMAKE_SOURCE_DIR + string("/tests/images/frame.png");
   string ipCamera = "http://192.168.1.100:8080/video";
@@ -216,6 +216,7 @@ int main(int, char **)
 
 #if REAL_CAMERA == true
   camera = ipCamera;
+  gameName = "test_engine";
 #endif
 
   string boardName = "Arctic";
@@ -224,14 +225,14 @@ int main(int, char **)
   LOGCFG.headers = true;
   LOGCFG.level = typelog::INFO;
 
-  // testEngineInit(baseDir, camera);
-  // testEngineLoadGame(baseDir, gameName, camera);
-  // testEngineSetBoard(baseDir, gameName, camera, boardName);
+  testEngineInit(baseDir, camera);
+  testEngineLoadGame(baseDir, gameName, camera);
+  testEngineSetBoard(baseDir, gameName, camera, boardName);
   // testEnginePlaySample(baseDir, gameName, camera);
   // testEnginePlaySampleSync(baseDir, gameName, camera);
   // testEnginePlaySampleSyncTranslated(baseDir, gameName, camera);
   // testEngineStopAllAudio(baseDir, gameName, camera);
   testEngineCalibrateReferenceFrame(baseDir, gameName, camera);
-  testEngineDetectColorCalibrationCard(baseDir, gameName, camera);
+  // testEngineDetectColorCalibrationCard(baseDir, gameName, camera);
   // testEngineQueryTokens(baseDir, gameName, camera, "", "");
 }

@@ -1,0 +1,170 @@
+{
+    "name": "Dev Game",
+    "boards": [
+        {
+            "name": "Arctic",
+            "asset": "Arctic-base.png",
+            "map": "Arctic-base.json"
+        }
+    ],
+    "tokens": [
+        {
+            "name": "Blue Circle",
+            "geometry": "Circle",
+            "color": "0,0,255"
+        },
+        {
+            "name": "Blue Hexagon",
+            "geometry": "Hexagon",
+            "color": "0,0,255"
+        },
+        {
+            "name": "Blue Pentagon",
+            "geometry": "Pentagon",
+            "color": "0,0,255"
+        },
+        {
+            "name": "Blue Rect",
+            "geometry": "Rect",
+            "color": "0,0,255"
+        },
+        {
+            "name": "Blue Square",
+            "geometry": "Square",
+            "color": "0,0,255"
+        },
+        {
+            "name": "Blue Triangle",
+            "geometry": "Triangle",
+            "color": "0,0,255"
+        },
+        {
+            "name": "Green Circle",
+            "geometry": "Circle",
+            "color": "0,255,0"
+        },
+        {
+            "name": "Green Hexagon",
+            "geometry": "Hexagon",
+            "color": "0,255,0"
+        },
+        {
+            "name": "Green Pentagon",
+            "geometry": "Pentagon",
+            "color": "0,255,0"
+        },
+        {
+            "name": "Green Rect",
+            "geometry": "Rect",
+            "color": "0,255,0"
+        },
+        {
+            "name": "Green Square",
+            "geometry": "Square",
+            "color": "0,255,0"
+        },
+        {
+            "name": "Green Triangle",
+            "geometry": "Triangle",
+            "color": "0,255,0"
+        },
+        {
+            "name": "Purple Circle",
+            "geometry": "Circle",
+            "color": "59,0,84"
+        },
+        {
+            "name": "Purple Hexagon",
+            "geometry": "Hexagon",
+            "color": "59,0,84"
+        },
+        {
+            "name": "Purple Pentagon",
+            "geometry": "Pentagon",
+            "color": "59,0,84"
+        },
+        {
+            "name": "Purple Rect",
+            "geometry": "Rect",
+            "color": "59,0,84"
+        },
+        {
+            "name": "Purple Square",
+            "geometry": "Square",
+            "color": "59,0,84"
+        },
+        {
+            "name": "Purple Triangle",
+            "geometry": "Triangle",
+            "color": "59,0,84"
+        },
+        {
+            "name": "Red Circle",
+            "geometry": "Circle",
+            "color": "255,0,0"
+        },
+        {
+            "name": "Red Hexagon",
+            "geometry": "Hexagon",
+            "color": "255,0,0"
+        },
+        {
+            "name": "Red Pentagon",
+            "geometry": "Pentagon",
+            "color": "255,0,0"
+        },
+        {
+            "name": "Red Rect",
+            "geometry": "Rect",
+            "color": "255,0,0"
+        },
+        {
+            "name": "Red Square",
+            "geometry": "Square",
+            "color": "255,0,0"
+        },
+        {
+            "name": "Red Triangle",
+            "geometry": "Triangle",
+            "color": "255,0,0"
+        },
+        {
+            "name": "Yellow Circle",
+            "geometry": "Circle",
+            "color": "255,255,0"
+        },
+        {
+            "name": "Yellow Hexagon",
+            "geometry": "Hexagon",
+            "color": "255,255,0"
+        },
+        {
+            "name": "Yellow Pentagon",
+            "geometry": "Pentagon",
+            "color": "255,255,0"
+        },
+        {
+            "name": "Yellow Rect",
+            "geometry": "Rect",
+            "color": "255,255,0"
+        },
+        {
+            "name": "Yellow Square",
+            "geometry": "Square",
+            "color": "255,255,0"
+        },
+        {
+            "name": "Yellow Triangle",
+            "geometry": "Triangle",
+            "color": "255,255,0"
+        },
+        {
+            "name": "Card No",
+            "asset": "card_no.png"
+        },
+        {
+            "name": "Card Yes",
+            "asset": "card_yes.png"
+        }
+    ]
+}

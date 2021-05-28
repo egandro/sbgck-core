@@ -121,6 +121,9 @@ bool Engine::calibrateReferenceFrame()
         Log(typelog::INFO) << "Detector calibrateReferenceFrame failed";
     }
 
+    // imshow("frameBoardEmpty", componentManager.currentBoard->frameBoardEmpty);
+    // waitKey();
+
     return true;
 }
 
