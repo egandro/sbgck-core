@@ -8,18 +8,11 @@ using namespace SBGCK;
 
 structlog LOGCFG = {};
 
-#define SILENT_TEST_SOUND true
-#define REAL_CAMERA false
-#define CAMERA_DEBUGGING true
-
 void testEngineInit(string baseDir, string camera)
 {
   SBGCK_TEST_BEGIN("testEngineInit");
 
   Engine engine;
-  engine.isAudioTesting = SILENT_TEST_SOUND;
-  engine.isCameraTesting = !REAL_CAMERA;
-  engine.isCameraDebugging = CAMERA_DEBUGGING;
 
   SBGCK_ASSERT_THROW(engine.init(baseDir, camera) == true);
 
@@ -31,9 +24,6 @@ void testEngineLoadGame(string baseDir, string gameName, string camera)
   SBGCK_TEST_BEGIN("testEngineLoadGame");
 
   Engine engine;
-  engine.isAudioTesting = SILENT_TEST_SOUND;
-  engine.isCameraTesting = !REAL_CAMERA;
-  engine.isCameraDebugging = CAMERA_DEBUGGING;
 
   SBGCK_ASSERT_THROW(engine.init(baseDir, camera) == true);
   SBGCK_ASSERT_THROW(engine.loadGame(gameName, "en") == true);
@@ -46,9 +36,6 @@ void testEngineSetBoard(string baseDir, string gameName, string camera, string b
   SBGCK_TEST_BEGIN("testEngineSetBoard");
 
   Engine engine;
-  engine.isAudioTesting = SILENT_TEST_SOUND;
-  engine.isCameraTesting = !REAL_CAMERA;
-  engine.isCameraDebugging = CAMERA_DEBUGGING;
 
   SBGCK_ASSERT_THROW(engine.init(baseDir, camera) == true);
   SBGCK_ASSERT_THROW(engine.loadGame(gameName, "en") == true);
@@ -62,9 +49,6 @@ void testEnginePlaySample(string baseDir, string gameName, string camera)
   SBGCK_TEST_BEGIN("testEnginePlaySample");
 
   Engine engine;
-  engine.isAudioTesting = SILENT_TEST_SOUND;
-  engine.isCameraTesting = !REAL_CAMERA;
-  engine.isCameraDebugging = CAMERA_DEBUGGING;
 
   SBGCK_ASSERT_THROW(engine.init(baseDir, camera) == true);
   SBGCK_ASSERT_THROW(engine.loadGame(gameName, "en") == true);
@@ -78,9 +62,6 @@ void testEnginePlaySampleSync(string baseDir, string gameName, string camera)
   SBGCK_TEST_BEGIN("testEnginePlaySampleSync");
 
   Engine engine;
-  engine.isAudioTesting = SILENT_TEST_SOUND;
-  engine.isCameraTesting = !REAL_CAMERA;
-  engine.isCameraDebugging = CAMERA_DEBUGGING;
 
   SBGCK_ASSERT_THROW(engine.init(baseDir, camera) == true);
   SBGCK_ASSERT_THROW(engine.loadGame(gameName, "en") == true);
@@ -94,9 +75,6 @@ void testEnginePlaySampleSyncTranslated(string baseDir, string gameName, string 
   SBGCK_TEST_BEGIN("testEnginePlaySampleSyncTranslated");
 
   Engine engine;
-  engine.isAudioTesting = SILENT_TEST_SOUND;
-  engine.isCameraTesting = !REAL_CAMERA;
-  engine.isCameraDebugging = CAMERA_DEBUGGING;
 
   SBGCK_ASSERT_THROW(engine.init(baseDir, camera) == true);
   SBGCK_ASSERT_THROW(engine.loadGame(gameName, "en") == true);
@@ -118,35 +96,33 @@ void testEngineStopAllAudio(string baseDir, string gameName, string camera)
   SBGCK_TEST_BEGIN("testEngineStopAllAudio");
 
   Engine engine;
-  engine.isAudioTesting = SILENT_TEST_SOUND;
-  engine.isCameraTesting = !REAL_CAMERA;
-  engine.isCameraDebugging = CAMERA_DEBUGGING;
 
   SBGCK_ASSERT_THROW(engine.init(baseDir, camera) == true);
   SBGCK_ASSERT_THROW(engine.loadGame(gameName, "en") == true);
   SBGCK_ASSERT_THROW(engine.playSample("Ove - Earth Is All We Have .ogg") == true);
 
-#if SILENT_TEST_SOUND == false
-  // https://stackoverflow.com/questions/19555121/how-to-get-current-timestamp-in-milliseconds-since-1970-just-the-way-java-gets
-  uint64_t end =
-      std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-
-  end += 1000 * 10; // 10 sec
-
-  while (true)
+  if (!engine.isAudioTesting)
   {
-    uint64_t now =
+    // https://stackoverflow.com/questions/19555121/how-to-get-current-timestamp-in-milliseconds-since-1970-just-the-way-java-gets
+    uint64_t end =
         std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 
-    if (now > end)
-    {
-      break;
-    }
+    end += 1000 * 10; // 10 sec
 
-    // wait consume some time
-    SoLoud::Thread::sleep(100);
+    while (true)
+    {
+      uint64_t now =
+          std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+
+      if (now > end)
+      {
+        break;
+      }
+
+      // wait consume some time
+      SoLoud::Thread::sleep(100);
+    }
   }
-#endif
 
   SBGCK_ASSERT_THROW(engine.stopAllAudio() == true);
 
@@ -158,14 +134,10 @@ void testEngineCalibrateReferenceFrame(string baseDir, string gameName, string c
   SBGCK_TEST_BEGIN("testEngineCalibrateReferenceFrame");
 
   Engine engine;
-  engine.isAudioTesting = SILENT_TEST_SOUND;
-  engine.isCameraTesting = !REAL_CAMERA;
-  engine.isCameraDebugging = CAMERA_DEBUGGING;
 
   SBGCK_ASSERT_THROW(engine.init(baseDir, camera) == true);
   SBGCK_ASSERT_THROW(engine.loadGame(gameName, "en") == true);
-  // no current board set
-  SBGCK_ASSERT_THROW(engine.calibrateReferenceFrame() == false);
+  SBGCK_ASSERT_THROW(engine.calibrateReferenceFrame() == false); // no current board set
   SBGCK_ASSERT_THROW(engine.setBoard("Arctic") == true);
   SBGCK_ASSERT_THROW(engine.calibrateReferenceFrame() == true);
 
@@ -177,9 +149,6 @@ void testEngineDetectColorCalibrationCard(string baseDir, string gameName, strin
   SBGCK_TEST_BEGIN("testEngineDetectColorCalibrationCard");
 
   Engine engine;
-  engine.isAudioTesting = SILENT_TEST_SOUND;
-  engine.isCameraTesting = !REAL_CAMERA;
-  engine.isCameraDebugging = CAMERA_DEBUGGING;
 
   SBGCK_ASSERT_THROW(engine.init(baseDir, camera) == true);
   SBGCK_ASSERT_THROW(engine.loadGame(gameName, "en") == true);
@@ -193,13 +162,12 @@ void testEngineQueryTokens(string baseDir, string gameName, string camera, strin
   SBGCK_TEST_BEGIN("testEngineQueryTokens");
 
   Engine engine;
-  engine.isAudioTesting = SILENT_TEST_SOUND;
-  engine.isCameraTesting = !REAL_CAMERA;
-  engine.isCameraDebugging = CAMERA_DEBUGGING;
 
   SBGCK_ASSERT_THROW(engine.init(baseDir, camera) == true);
   SBGCK_ASSERT_THROW(engine.loadGame(gameName, "en") == true);
+  SBGCK_ASSERT_THROW(engine.setBoard("Arctic") == true);
   SBGCK_ASSERT_THROW(engine.calibrateReferenceFrame() == true);
+  SBGCK_ASSERT_THROW(engine.setTestingCameraFrame(cameraFrame) == true);
   SBGCK_ASSERT_THROW(engine.queryTokens(inStr) == outString);
 
   SBGCK_TEST_END();
@@ -208,15 +176,20 @@ void testEngineQueryTokens(string baseDir, string gameName, string camera, strin
 int main(int, char **)
 {
   SBGCK_TEST_INIT();
+
+  Engine::isAudioTesting = true;
+  Engine::isCameraTesting = true;
+
   string baseDir = CMAKE_SOURCE_DIR + string("/tests/games");
   string gameName = "test_engine_no_camera";
   string camera = baseDir + string("/test_engine_no_camera/boards/frame.png");
   string frame_tokens = baseDir + string("/test_engine_no_camera/boards/frame_tokens.png");
 
-#if REAL_CAMERA == true
-  camera = "http://192.168.1.100:8080/video";
-  gameName = "test_engine";
-#endif
+  if (!Engine::isCameraTesting)
+  {
+    camera = "http://192.168.1.100:8080/video";
+    gameName = "test_engine";
+  }
 
   string boardName = "Arctic";
 

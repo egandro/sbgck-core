@@ -1,12 +1,23 @@
 #include "sbgck.hpp"
 #include <soloud/soloud_thread.h>
 #include <sbgck_opencv/detector.hpp>
+#include "querytoken.hpp"
 
 using namespace SBGCK;
+
+bool Engine::isAudioTesting = false;
+bool Engine::isCameraTesting = false;
 
 void Engine::queryTokens(QueryTokenParam &param, QueryTokenResult &result)
 {
     Log(typelog::INFO) << "Engine queryTokens (internal)";
+}
+
+bool Engine::setTestingCameraFrame(string fileName) {
+    if(isCameraTesting) {
+        return cameraManager.setTestingCameraFrame(fileName);
+    }
+    return true;
 }
 
 bool Engine::init(string applicationDir, string url)
@@ -111,10 +122,6 @@ bool Engine::calibrateReferenceFrame()
     if (!cameraManager.getFrame(frame))
     {
         return false;
-    }
-
-    if(!isCameraTesting && isCameraDebugging) {
-
     }
 
     if(!Detector::calibrateReferenceFrame(frame, *(componentManager.currentBoard))) {

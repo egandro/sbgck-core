@@ -13,7 +13,12 @@ namespace SBGCK
     {
         Camera camera;
 
+
     public:
+        bool setTestingCameraFrame(string fileName) {
+            return camera.setDebugCameraFrame(fileName);
+        }
+
         bool init(string url = "", bool isTesting = false)
         {
             CameraMode mode = CameraMode::Default;

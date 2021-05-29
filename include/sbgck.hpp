@@ -12,28 +12,8 @@
 
 namespace SBGCK
 {
-
-    class QueryTokenParam
-    {
-    public:
-        vector<string> ROI;
-        int timeout;
-        vector<string> names;
-    };
-
-    class QueryTokenResultToken
-    {
-    public:
-        string ROI;
-        string name;
-    };
-
-    class QueryTokenResult
-    {
-    public:
-        string error;
-        vector<QueryTokenResultToken> tokens;
-    };
+    class QueryTokenParam;
+    class QueryTokenResult;
 
     class Engine
     {
@@ -46,14 +26,9 @@ namespace SBGCK
         void queryTokens(QueryTokenParam &param, QueryTokenResult &result);
 
     public:
-        bool isAudioTesting;
-        bool isCameraTesting;
-        bool isCameraDebugging;
-
-        Engine()
-            : isAudioTesting(false), isCameraTesting(false)
-        {
-        }
+        static bool isAudioTesting;
+        static bool isCameraTesting;
+        bool setTestingCameraFrame(string fileName);
 
         //////////////////////////////////////////
         // Management API for UI
