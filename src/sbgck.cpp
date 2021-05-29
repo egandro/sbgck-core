@@ -24,7 +24,7 @@ void Engine::queryTokens(QueryTokenParam &param, QueryTokenResult &result)
     Mat frame;
 
     // TODO: fix me?
-    for(int i = 0; i< 100; i++) {
+    for(int i = 0; i< 10; i++) {
         if (!cameraManager.getFrame(frame))
         {
             result.error = "can't get camera frame";
