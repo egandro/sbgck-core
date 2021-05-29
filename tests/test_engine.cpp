@@ -188,7 +188,7 @@ void testEngineDetectColorCalibrationCard(string baseDir, string gameName, strin
   SBGCK_TEST_END();
 }
 
-void testEngineQueryTokens(string baseDir, string gameName, string camera, string inStr, string outString)
+void testEngineQueryTokens(string baseDir, string gameName, string camera, string cameraFrame, string inStr, string outString)
 {
   SBGCK_TEST_BEGIN("testEngineQueryTokens");
 
@@ -199,6 +199,7 @@ void testEngineQueryTokens(string baseDir, string gameName, string camera, strin
 
   SBGCK_ASSERT_THROW(engine.init(baseDir, camera) == true);
   SBGCK_ASSERT_THROW(engine.loadGame(gameName, "en") == true);
+  SBGCK_ASSERT_THROW(engine.calibrateReferenceFrame() == true);
   SBGCK_ASSERT_THROW(engine.queryTokens(inStr) == outString);
 
   SBGCK_TEST_END();
@@ -209,13 +210,11 @@ int main(int, char **)
   SBGCK_TEST_INIT();
   string baseDir = CMAKE_SOURCE_DIR + string("/tests/games");
   string gameName = "test_engine_no_camera";
-  string camera = "";
-  string frame_png = CMAKE_SOURCE_DIR + string("/tests/images/frame.png");
-  string ipCamera = "http://192.168.1.100:8080/video";
-  camera = frame_png;
+  string camera = baseDir + string("/test_engine_no_camera/boards/frame.png");
+  string frame_tokens = baseDir + string("/test_engine_no_camera/boards/frame_tokens.png");
 
 #if REAL_CAMERA == true
-  camera = ipCamera;
+  camera = "http://192.168.1.100:8080/video";
   gameName = "test_engine";
 #endif
 
@@ -233,6 +232,6 @@ int main(int, char **)
   // testEnginePlaySampleSyncTranslated(baseDir, gameName, camera);
   // testEngineStopAllAudio(baseDir, gameName, camera);
   testEngineCalibrateReferenceFrame(baseDir, gameName, camera);
-  // testEngineDetectColorCalibrationCard(baseDir, gameName, camera);
-  // testEngineQueryTokens(baseDir, gameName, camera, "", "");
+  testEngineDetectColorCalibrationCard(baseDir, gameName, camera);
+  testEngineQueryTokens(baseDir, gameName, camera, frame_tokens, "", "");
 }
