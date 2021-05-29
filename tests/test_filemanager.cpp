@@ -1,6 +1,6 @@
 #include "base.hpp"
 #include <sbgck_opencv/log.hpp>
-#include "filemanager.hpp"
+#include "internal/filemanager.hpp"
 
 using namespace SBGCK;
 

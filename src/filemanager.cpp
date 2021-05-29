@@ -2,6 +2,12 @@
 #include <fstream>
 #include "internal/filemanager.hpp"
 
+extern "C"
+{
+#include <libs/assetsys.h>
+}
+
+
 using namespace SBGCK;
 
 #define VFS_ROOT_FOLDER "/game"

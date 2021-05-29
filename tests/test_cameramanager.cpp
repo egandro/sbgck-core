@@ -1,6 +1,6 @@
 #include "base.hpp"
 #include <sbgck_opencv/log.hpp>
-#include "cameramanager.hpp"
+#include "internal/cameramanager.hpp"
 
 using namespace SBGCK;
 

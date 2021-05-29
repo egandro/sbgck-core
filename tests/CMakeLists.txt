@@ -63,7 +63,6 @@ link_directories(${EXTERNAL_INSTALL_LOCATION}/lib ${EXTERNAL_INSTALL_LOCATION}/l
 include_directories( ${OpenCV_INCLUDE_DIRS}  "../tests/" "../src/" "../include/" )
 file(GLOB SOURCE_FILES "../src/*.hpp" "../include/*.hpp")
 
-
 # https://stackoverflow.com/questions/21394768/cmake-cannot-find-test-if-cmake-runtime-output-directory-is-changed
 macro (create_test target)
   add_executable(${target} ${target}.cpp)
@@ -71,9 +70,9 @@ macro (create_test target)
   target_link_libraries(${target} ${OpenCV_LIBS} sbgck_core sbgck_opencv soloud ${SYSTEM_LIBRARIES})
 endmacro (create_test)
 
-#create_test(test_cameramanager)
-#create_test(test_componentmanager)
+create_test(test_cameramanager)
+create_test(test_componentmanager)
 create_test(test_engine)
-#create_test(test_filemanager)
-#create_test(test_querytoken)
-#create_test(test_soundmanager)
+create_test(test_filemanager)
+create_test(test_querytoken)
+create_test(test_soundmanager)

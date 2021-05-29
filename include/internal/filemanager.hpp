@@ -1,17 +1,13 @@
 #ifndef _FileManager_HPP
 #define _FileManager_HPP
 
-extern "C"
-{
-#include <libs/assetsys.h>
-}
-
 #include <string>
 #include <sbgck_opencv/log.hpp>
 
+typedef struct assetsys_t assetsys_t;
+
 namespace SBGCK
 {
-
     class VFSData
     {
         int contentSize;
