@@ -14,6 +14,13 @@ void Engine::queryTokens(QueryTokenParam &param, QueryTokenResult &result)
 {
     Log(typelog::INFO) << "Engine queryTokens (internal)";
 
+    if (componentManager.currentBoard == NULL)
+    {
+        Log(typelog::INFO) << "ComponentManager has no currentBoard - use setBoard()";
+        result.error = "no currentBoard set - use setBoard()";
+        return;
+    }
+
     Mat frame;
     if (!cameraManager.getFrame(frame))
     {
