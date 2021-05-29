@@ -200,16 +200,16 @@ int main(int, char **)
   string jsonOutput;
   std::map<string, string> queryTokenTests;
 
-  jsonInput = "garbage";
-  jsonOutput = (R"( { "error": "json parse error", "tokens": [] } )"_json).dump();
-  queryTokenTests[jsonInput] = jsonOutput;
+  // jsonInput = "garbage";
+  // jsonOutput = (R"( { "error": "json parse error", "tokens": [] } )"_json).dump();
+  // queryTokenTests[jsonInput] = jsonOutput;
 
-  jsonInput = (R"( { "ROI": [ ], "timeout": 200, "names": [ ] } )"_json).dump();
-  jsonOutput = (R"( { "error": "", "tokens": [] } )"_json).dump();
-  queryTokenTests[jsonInput] = jsonOutput;
+  // jsonInput = (R"( { "ROI": [ ], "timeout": 200, "names": [ ] } )"_json).dump();
+  // jsonOutput = (R"( { "error": "", "tokens": [] } )"_json).dump();
+  // queryTokenTests[jsonInput] = jsonOutput;
 
-  jsonInput = (R"( { "ROI": [ ], "timeout": 200, "names": [ ] } )"_json).dump();
-  jsonOutput = (R"( { "error": "", "tokens": [] } )"_json).dump();
+  jsonInput = (R"( { "ROI": [ ], "timeout": 200, "names": [ "Blue Triangle" ] } )"_json).dump();
+  jsonOutput = (R"( { "error": "", "tokens": [ { "ROI": "#bridge", "name": "Blue Triangle" } ] } )"_json).dump();
   queryTokenTests[jsonInput] = jsonOutput;
 
   LOGCFG.prefix = (char *)"test_engine";

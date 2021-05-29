@@ -1,6 +1,7 @@
 #include "sbgck.hpp"
 #include <soloud/soloud_thread.h>
 #include <sbgck_opencv/detector.hpp>
+#include <sbgck_opencv/token.hpp>
 #include "querytoken.hpp"
 
 using namespace SBGCK;
@@ -12,6 +13,52 @@ bool Engine::isCameraTesting = false;
 void Engine::queryTokens(QueryTokenParam &param, QueryTokenResult &result)
 {
     Log(typelog::INFO) << "Engine queryTokens (internal)";
+
+    Mat frame;
+    if (!cameraManager.getFrame(frame))
+    {
+        result.error = "can't get camera frame";
+        return;
+    }
+
+    std::vector<const Token *> tokens;
+    std::vector<string> ROIs;
+    std::vector<pair<std::string, std::string>> kvps;
+
+    for (size_t i = 0; i < param.names.size(); i++)
+    {
+        std::string tokenName = param.names[i];
+
+        Token *token = componentManager.getToken(tokenName);
+
+        if(token == NULL) {
+            Log(typelog::WARN) << "unknown token " << tokenName;
+        } else {
+            tokens.push_back(token);
+        }
+    }
+
+    for (size_t i = 0; i < param.ROI.size(); i++)
+    {
+        ROIs.push_back(param.ROI[i]);
+    }
+
+    if (!Detector::queryTokens(frame, *(componentManager.currentBoard), tokens, ROIs, kvps))
+    {
+        Log(typelog::INFO) << "Detector queryTokens failed";
+        result.error = "can't query tokens";
+        return;
+    }
+
+    for (size_t i = 0; i < kvps.size(); i++)
+    {
+        QueryTokenResultToken item;
+
+        item.ROI = kvps[i].first;
+        item.name = kvps[i].second;
+
+        result.tokens.push_back(item);
+    }
 }
 
 bool Engine::setTestingCameraFrame(string fileName)
@@ -157,7 +204,7 @@ string Engine::queryTokens(string jsonStr)
         QueryTokenParam queryTokenParam = json.get<QueryTokenParam>();
         queryTokens(queryTokenParam, result);
     }
-    catch (json::exception & error)
+    catch (json::exception &error)
     {
         Log(typelog::ERR) << "Engine queryTokens - json::exception " << error.what();
         result.error = "json parse error";
