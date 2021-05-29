@@ -251,5 +251,5 @@ bool ComponentManager::setBoard(string boardName, bool resetEmptyFrame)
         }
     }
 
-    return true;
+    return false;
 }
