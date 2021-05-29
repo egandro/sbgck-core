@@ -160,7 +160,7 @@ void testEngineDetectColorCalibrationCard(string baseDir, string gameName, strin
   SBGCK_TEST_END();
 }
 
-void testEngineQueryTokens(string baseDir, string gameName, string camera, string cameraFrame, string inStr, string outString)
+void testEngineQueryTokens(string baseDir, string gameName, string camera, string cameraFrame, std::map<string, string> queryTokenTests)
 {
   SBGCK_TEST_BEGIN("testEngineQueryTokens");
 
@@ -171,7 +171,11 @@ void testEngineQueryTokens(string baseDir, string gameName, string camera, strin
   SBGCK_ASSERT_THROW(engine.setBoard("Arctic") == true);
   SBGCK_ASSERT_THROW(engine.calibrateReferenceFrame() == true);
   SBGCK_ASSERT_THROW(engine.setTestingCameraFrame(cameraFrame) == true);
-  SBGCK_ASSERT_THROW(engine.queryTokens(inStr) == outString);
+
+  for (map<string, string>::iterator it = queryTokenTests.begin(); it != queryTokenTests.end(); it++)
+  {
+    SBGCK_ASSERT_THROW(engine.queryTokens(it->first) == it->second);
+  }
 
   SBGCK_TEST_END();
 }
@@ -208,8 +212,28 @@ int main(int, char **)
   // jsonOutput = (R"( { "error": "", "tokens": [] } )"_json).dump();
   // queryTokenTests[jsonInput] = jsonOutput;
 
-  jsonInput = (R"( { "ROI": [ ], "timeout": 200, "names": [ "Blue Triangle" ] } )"_json).dump();
-  jsonOutput = (R"( { "error": "", "tokens": [ { "ROI": "#bridge", "name": "Blue Triangle" } ] } )"_json).dump();
+  // jsonInput = (R"( { "ROI": [ "#invalid" ], "timeout": 200, "names": [ "Blue Triangle" ] } )"_json).dump();
+  // jsonOutput = (R"( { "error": "", "tokens": [ ] } )"_json).dump();
+  // queryTokenTests[jsonInput] = jsonOutput;
+
+  // jsonInput = (R"( { "ROI": [ ], "timeout": 200, "names": [ "Blue Triangle" ] } )"_json).dump();
+  // jsonOutput = (R"( { "error": "", "tokens": [ { "ROI": "#bridge", "name": "Blue Triangle" } ] } )"_json).dump();
+  // queryTokenTests[jsonInput] = jsonOutput;
+
+  // jsonInput = (R"( { "ROI": [ "#bridge" ], "timeout": 200, "names": [ "Blue Triangle" ] } )"_json).dump();
+  // jsonOutput = (R"( { "error": "", "tokens": [ { "ROI": "#bridge", "name": "Blue Triangle" } ] } )"_json).dump();
+  // queryTokenTests[jsonInput] = jsonOutput;
+
+  // jsonInput = (R"( { "ROI": [ "#bridge" ], "timeout": 200, "names": [ "Blue Triangle" ] } )"_json).dump();
+  // jsonOutput = (R"( { "error": "", "tokens": [ { "ROI": "#bridge", "name": "Blue Triangle" } ] } )"_json).dump();
+  // queryTokenTests[jsonInput] = jsonOutput;
+
+  jsonInput = (R"( { "ROI": [ ], "timeout": 200, "names": [ "Blue Triangle", "Red Circle", "Green Hexagon", "Garbage" ] } )"_json).dump();
+  jsonOutput = (R"( { "error": "", "tokens": [
+      { "ROI": "#bridge", "name": "Blue Triangle" },
+      { "ROI": "#bridge", "name": "Red Circle" },
+      { "ROI": "#bridge", "name": "Green Hexagon" }
+  ] } )"_json).dump();
   queryTokenTests[jsonInput] = jsonOutput;
 
   LOGCFG.prefix = (char *)"test_engine";
@@ -226,8 +250,5 @@ int main(int, char **)
   // testEngineCalibrateReferenceFrame(baseDir, gameName, camera);
   // testEngineDetectColorCalibrationCard(baseDir, gameName, camera);
 
-  for (map<string, string>::iterator it = queryTokenTests.begin(); it != queryTokenTests.end(); it++)
-  {
-    testEngineQueryTokens(baseDir, gameName, camera, frame_tokens, it->first, it->second);
-  }
+  testEngineQueryTokens(baseDir, gameName, camera, frame_tokens, queryTokenTests);
 }
