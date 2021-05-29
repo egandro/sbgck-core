@@ -15,6 +15,25 @@ namespace SBGCK
         vector<string> ROI;
         int timeout;
         vector<string> names;
+
+        QueryTokenParam() : timeout(0)
+        {
+        }
+
+        QueryTokenParam(const QueryTokenParam &value)
+        {
+            for (size_t i = 0; i < value.ROI.size(); i++)
+            {
+                ROI.push_back(value.ROI.at(i));
+            }
+
+            timeout = value.timeout;
+
+            for (size_t i = 0; i < value.names.size(); i++)
+            {
+                names.push_back(value.names.at(i));
+            }
+        }
     };
 
     class QueryTokenResultToken
@@ -22,6 +41,13 @@ namespace SBGCK
     public:
         string ROI;
         string name;
+
+        QueryTokenResultToken() {}
+
+        QueryTokenResultToken(const QueryTokenResultToken &value) {
+            ROI = value.ROI;
+            name = value.name;
+        }
     };
 
     class QueryTokenResult
@@ -29,6 +55,17 @@ namespace SBGCK
     public:
         string error;
         vector<QueryTokenResultToken> tokens;
+
+        QueryTokenResult() {}
+
+        QueryTokenResult(const QueryTokenResult &value) {
+            error = value.error;
+
+            for (size_t i = 0; i < value.tokens.size(); i++)
+            {
+                tokens.push_back(value.tokens.at(i));
+            }
+        }
     };
 
     // json: https://github.com/nlohmann/json#basic-usage

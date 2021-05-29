@@ -47,7 +47,7 @@ namespace SBGCK
         bool stopAllAudio();
         bool calibrateReferenceFrame();
         bool detectColorCalibrationCard();
-        string queryTokens(string json);
+        string queryTokens(string jsonStr);
     };
 }
 

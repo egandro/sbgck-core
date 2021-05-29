@@ -1,10 +1,13 @@
 #include <chrono>
+#include <map>
+#include <nlohmann/json.hpp>
 #include "base.hpp"
 #include <sbgck_opencv/log.hpp>
 #include <soloud/soloud_thread.h>
 #include "sbgck.hpp"
 
 using namespace SBGCK;
+using namespace nlohmann;
 
 structlog LOGCFG = {};
 
@@ -193,18 +196,38 @@ int main(int, char **)
 
   string boardName = "Arctic";
 
+  string jsonInput;
+  string jsonOutput;
+  std::map<string, string> queryTokenTests;
+
+  jsonInput = "garbage";
+  jsonOutput = (R"( { "error": "json parse error", "tokens": [] } )"_json).dump();
+  queryTokenTests[jsonInput] = jsonOutput;
+
+  jsonInput = (R"( { "ROI": [ ], "timeout": 200, "names": [ ] } )"_json).dump();
+  jsonOutput = (R"( { "error": "", "tokens": [] } )"_json).dump();
+  queryTokenTests[jsonInput] = jsonOutput;
+
+  jsonInput = (R"( { "ROI": [ ], "timeout": 200, "names": [ ] } )"_json).dump();
+  jsonOutput = (R"( { "error": "", "tokens": [] } )"_json).dump();
+  queryTokenTests[jsonInput] = jsonOutput;
+
   LOGCFG.prefix = (char *)"test_engine";
   LOGCFG.headers = true;
   LOGCFG.level = typelog::INFO;
 
-  testEngineInit(baseDir, camera);
-  testEngineLoadGame(baseDir, gameName, camera);
-  testEngineSetBoard(baseDir, gameName, camera, boardName);
+  // testEngineInit(baseDir, camera);
+  // testEngineLoadGame(baseDir, gameName, camera);
+  // testEngineSetBoard(baseDir, gameName, camera, boardName);
   // testEnginePlaySample(baseDir, gameName, camera);
   // testEnginePlaySampleSync(baseDir, gameName, camera);
   // testEnginePlaySampleSyncTranslated(baseDir, gameName, camera);
   // testEngineStopAllAudio(baseDir, gameName, camera);
-  testEngineCalibrateReferenceFrame(baseDir, gameName, camera);
-  testEngineDetectColorCalibrationCard(baseDir, gameName, camera);
-  testEngineQueryTokens(baseDir, gameName, camera, frame_tokens, "", "");
+  // testEngineCalibrateReferenceFrame(baseDir, gameName, camera);
+  // testEngineDetectColorCalibrationCard(baseDir, gameName, camera);
+
+  for (map<string, string>::iterator it = queryTokenTests.begin(); it != queryTokenTests.end(); it++)
+  {
+    testEngineQueryTokens(baseDir, gameName, camera, frame_tokens, it->first, it->second);
+  }
 }

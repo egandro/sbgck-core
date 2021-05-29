@@ -4,6 +4,7 @@
 #include "querytoken.hpp"
 
 using namespace SBGCK;
+using namespace nlohmann;
 
 bool Engine::isAudioTesting = false;
 bool Engine::isCameraTesting = false;
@@ -13,8 +14,10 @@ void Engine::queryTokens(QueryTokenParam &param, QueryTokenResult &result)
     Log(typelog::INFO) << "Engine queryTokens (internal)";
 }
 
-bool Engine::setTestingCameraFrame(string fileName) {
-    if(isCameraTesting) {
+bool Engine::setTestingCameraFrame(string fileName)
+{
+    if (isCameraTesting)
+    {
         return cameraManager.setTestingCameraFrame(fileName);
     }
     return true;
@@ -124,7 +127,8 @@ bool Engine::calibrateReferenceFrame()
         return false;
     }
 
-    if(!Detector::calibrateReferenceFrame(frame, *(componentManager.currentBoard))) {
+    if (!Detector::calibrateReferenceFrame(frame, *(componentManager.currentBoard)))
+    {
         Log(typelog::INFO) << "Detector calibrateReferenceFrame failed";
     }
 
@@ -141,9 +145,25 @@ bool Engine::detectColorCalibrationCard()
     return true;
 }
 
-string Engine::queryTokens(string json)
+string Engine::queryTokens(string jsonStr)
 {
-    Log(typelog::INFO) << "Engine queryTokens" << json;
+    Log(typelog::INFO) << "Engine queryTokens" << jsonStr;
 
-    return "{ \"error\": \"\" }";
+    QueryTokenResult result;
+
+    try
+    {
+        json json = json.parse(jsonStr);
+        QueryTokenParam queryTokenParam = json.get<QueryTokenParam>();
+        queryTokens(queryTokenParam, result);
+    }
+    catch (json::exception & error)
+    {
+        Log(typelog::ERR) << "Engine queryTokens - json::exception " << error.what();
+        result.error = "json parse error";
+    }
+
+    json j_result = result;
+    string resultStr = j_result.dump();
+    return resultStr;
 }
