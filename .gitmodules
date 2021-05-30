@@ -5,6 +5,3 @@
 	branch = main
 	path = libs
 	url = https://github.com/egandro/libs
-[submodule "soloud"]
-	path = soloud
-	url = https://github.com/egandro/soloud
