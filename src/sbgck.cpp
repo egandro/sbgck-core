@@ -24,7 +24,8 @@ void Engine::queryTokens(QueryTokenParam &param, QueryTokenResult &result)
     Mat frame;
 
     // TODO: fix me?
-    for(int i = 0; i< 10; i++) {
+    for (int i = 0; i < 10; i++)
+    {
         if (!cameraManager.getFrame(frame))
         {
             result.error = "can't get camera frame";
@@ -46,9 +47,12 @@ void Engine::queryTokens(QueryTokenParam &param, QueryTokenResult &result)
 
         Token *token = componentManager.getToken(tokenName);
 
-        if(token == NULL) {
+        if (token == NULL)
+        {
             Log(typelog::WARN) << "unknown token " << tokenName;
-        } else {
+        }
+        else
+        {
             cfg.tokens.push_back(token);
         }
     }
@@ -85,9 +89,11 @@ bool Engine::setTestingCameraFrame(string fileName)
     return true;
 }
 
-bool Engine::init(string applicationDir, string url)
+bool Engine::init(string applicationDir, string url, bool useDebugReferenceFrameCache)
 {
     Log(typelog::INFO) << "Engine init: " << applicationDir;
+
+    referenceFrameCache = useDebugReferenceFrameCache;
 
     if (!fileManager.init(applicationDir))
         return false;
@@ -181,6 +187,10 @@ bool Engine::calibrateReferenceFrame()
     {
         Log(typelog::INFO) << "ComponentManager default board as no asset";
         return false;
+    }
+
+    if (referenceFrameCache)
+    {
     }
 
     Mat frame;

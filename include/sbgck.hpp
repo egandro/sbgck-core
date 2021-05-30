@@ -18,6 +18,7 @@ namespace SBGCK
     class Engine
     {
         string language;
+        bool referenceFrameCache;
 
         FileManager fileManager;
         SoundManager soundManager;
@@ -28,13 +29,19 @@ namespace SBGCK
     public:
         static bool isAudioTesting;
         static bool isCameraTesting;
+
+        Engine()
+            : referenceFrameCache(false) {
+        }
+
+
         bool setTestingCameraFrame(string fileName);
 
         //////////////////////////////////////////
         // Management API for UI
         //////////////////////////////////////////
 
-        bool init(string applicationDir, string cameraUrl);
+        bool init(string applicationDir, string cameraUrl, bool useDebugReferenceFrameCache=false);
         bool loadGame(string gameName, string lang);
 
         //////////////////////////////////////////

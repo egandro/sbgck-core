@@ -72,6 +72,7 @@ namespace SBGCK
         bool openVFS(string gameName);
         string readVFSString(string vfsFile);
         bool readVFSData(string vfsFile, VFSData &data);
+        string getCacheDir();
     };
 }
 

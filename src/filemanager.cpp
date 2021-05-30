@@ -8,7 +8,6 @@ extern "C"
 #include <libs/assetsys.h>
 }
 
-
 using namespace SBGCK;
 
 #define VFS_ROOT_FOLDER "/game"
@@ -70,7 +69,7 @@ bool FileManager::gameFileExist(string fileName)
 
 bool FileManager::init(string applicationDir)
 {
-    replace( applicationDir.begin(), applicationDir.end(), '\\', '/'); // de-windows
+    replace(applicationDir.begin(), applicationDir.end(), '\\', '/'); // de-windows
 
     Log(typelog::INFO) << "FileManager init: " << applicationDir;
 
@@ -178,4 +177,26 @@ bool FileManager::readVFSData(string vfsFile, VFSData &data)
     data.setData(size, content);
 
     return true;
+}
+
+string FileManager::getCacheDir()
+{
+    Log(typelog::INFO) << "FileManager getCacheDir";
+
+    string cacheDir = baseDir + "/" + "___cache"; // show on top of file explorer
+
+    if (physicalDirExist(cacheDir))
+    {
+        return cacheDir;
+    }
+
+    filesystem::create_directory(cacheDir);
+
+    if (!physicalDirExist(cacheDir))
+    {
+        Log(typelog::ERR) << "FileManager can't create cache dir: " << cacheDir;
+        return "";
+    }
+
+    return cacheDir;
 }

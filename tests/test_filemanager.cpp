@@ -92,7 +92,6 @@ void testVFSDirNotExist(string baseDir, string dirName, string vfsGameDir)
   SBGCK_TEST_END();
 }
 
-
 void testVFSFileExist(string baseDir, string dirName, string vfsGameFileName)
 {
   SBGCK_TEST_BEGIN("testVFSFileExist");
@@ -146,16 +145,27 @@ void testVFSRead(string baseDir, string dirName, string vfsGameFileName, string 
   SBGCK_ASSERT_THROW(fm.readVFSData(vfsGameFileName, data) == true);
   SBGCK_ASSERT_THROW(data.size() >= (int)startsWith.size());
 
-  for(std::string::size_type i = 0; i < startsWith.size(); ++i) {
-      char c = startsWith[i];
-      char *str = (char*)data.content();
-      SBGCK_ASSERT_THROW(c == str[i]);
+  for (std::string::size_type i = 0; i < startsWith.size(); ++i)
+  {
+    char c = startsWith[i];
+    char *str = (char *)data.content();
+    SBGCK_ASSERT_THROW(c == str[i]);
   }
 
   SBGCK_TEST_END();
 }
 
+void testGetCacheDir(string baseDir, string dirName)
+{
+  SBGCK_TEST_BEGIN("testGetCacheDir");
 
+  FileManager fm;
+
+  SBGCK_ASSERT_THROW(fm.init(baseDir) == true);
+  SBGCK_ASSERT_THROW(fm.getCacheDir().empty() == false);
+
+  SBGCK_TEST_END();
+}
 
 int main(int, char **)
 {
@@ -171,15 +181,17 @@ int main(int, char **)
   LOGCFG.headers = true;
   LOGCFG.level = typelog::INFO;
 
-  testPhysicalDirExist(baseDir, physicalGameDir);
-  testPhysicalDirNotExist(baseDir, "garbage");
-  testPhysicalFileExist(baseDir, physicalFileName);
-  testPhysicalFileNotExist(baseDir, "garbage.txt");
-  testOpenVFS(baseDir, physicalGameDir);
-  testVFSDirExist(baseDir, physicalGameDir, vfsGameDir);
-  testVFSDirNotExist(baseDir, physicalGameDir, "garbage");
-  testVFSFileExist(baseDir, physicalGameDir, vfsGameFileName);
-  testVFSFileNotExist(baseDir, physicalGameDir, "garbage.txt");
-  testVFSReadString(baseDir, physicalGameDir, vfsGameFileName, "0123456789");
-  testVFSRead(baseDir, physicalGameDir, vfsGameFileName, "0123456789");
+  // testPhysicalDirExist(baseDir, physicalGameDir);
+  // testPhysicalDirNotExist(baseDir, "garbage");
+  // testPhysicalFileExist(baseDir, physicalFileName);
+  // testPhysicalFileNotExist(baseDir, "garbage.txt");
+  // testOpenVFS(baseDir, physicalGameDir);
+  // testVFSDirExist(baseDir, physicalGameDir, vfsGameDir);
+  // testVFSDirNotExist(baseDir, physicalGameDir, "garbage");
+  // testVFSFileExist(baseDir, physicalGameDir, vfsGameFileName);
+  // testVFSFileNotExist(baseDir, physicalGameDir, "garbage.txt");
+  // testVFSReadString(baseDir, physicalGameDir, vfsGameFileName, "0123456789");
+  // testVFSRead(baseDir, physicalGameDir, vfsGameFileName, "0123456789");
+
+  testGetCacheDir(baseDir, physicalGameDir);
 }
