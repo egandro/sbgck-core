@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <filesystem>
 #include <fstream>
 #include "internal/filemanager.hpp"
@@ -69,6 +70,8 @@ bool FileManager::gameFileExist(string fileName)
 
 bool FileManager::init(string applicationDir)
 {
+    replace( applicationDir.begin(), applicationDir.end(), "\\", "/"); // rewindowsitize
+
     Log(typelog::INFO) << "FileManager init: " << applicationDir;
 
     if (!physicalDirExist(applicationDir))
