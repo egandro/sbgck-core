@@ -70,7 +70,7 @@ bool FileManager::gameFileExist(string fileName)
 
 bool FileManager::init(string applicationDir)
 {
-    replace( applicationDir.begin(), applicationDir.end(), "\\", "/"); // rewindowsitize
+    replace( applicationDir.begin(), applicationDir.end(), '\\', '/'); // de-windows
 
     Log(typelog::INFO) << "FileManager init: " << applicationDir;
 
