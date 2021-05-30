@@ -247,6 +247,10 @@ bool Engine::detectColorCalibrationCard()
 {
     Log(typelog::INFO) << "Engine calibrateReferenceFrame";
     Log(typelog::WARN) << " detectColorCalibrationCard NOT IMPLEMENTED";
+    if (calibrationCache)
+    {
+        Log(typelog::WARN) << " ... but I could use a cache :)";
+    }
     return true;
 }
 
