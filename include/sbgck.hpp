@@ -18,7 +18,7 @@ namespace SBGCK
     class Engine
     {
         string language;
-        bool referenceFrameCache;
+        bool calibrationCache;
 
         FileManager fileManager;
         SoundManager soundManager;
@@ -31,7 +31,7 @@ namespace SBGCK
         static bool isCameraTesting;
 
         Engine()
-            : referenceFrameCache(false) {
+            : calibrationCache(false) {
         }
 
 
@@ -41,7 +41,7 @@ namespace SBGCK
         // Management API for UI
         //////////////////////////////////////////
 
-        bool init(string applicationDir, string cameraUrl, bool useDebugReferenceFrameCache=false);
+        bool init(string applicationDir, string cameraUrl, bool useDebugCalibrationCache=false);
         bool loadGame(string gameName, string lang);
 
         //////////////////////////////////////////

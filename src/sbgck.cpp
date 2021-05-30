@@ -2,6 +2,7 @@
 #include <soloud/soloud_thread.h>
 #include <sbgck_opencv/detector.hpp>
 #include <sbgck_opencv/token.hpp>
+#include <sbgck_opencv/mathelper.hpp>
 #include "querytoken.hpp"
 
 using namespace SBGCK;
@@ -89,11 +90,11 @@ bool Engine::setTestingCameraFrame(string fileName)
     return true;
 }
 
-bool Engine::init(string applicationDir, string url, bool useDebugReferenceFrameCache)
+bool Engine::init(string applicationDir, string url, bool useDebugCalibrationCache)
 {
     Log(typelog::INFO) << "Engine init: " << applicationDir;
 
-    referenceFrameCache = useDebugReferenceFrameCache;
+    calibrationCache = useDebugCalibrationCache;
 
     if (!fileManager.init(applicationDir))
         return false;
@@ -189,8 +190,25 @@ bool Engine::calibrateReferenceFrame()
         return false;
     }
 
-    if (referenceFrameCache)
+    if (calibrationCache)
     {
+        string cacheDir = fileManager.getCacheDir();
+        if (cacheDir.empty())
+        {
+            Log(typelog::WARN) << "can't use the debug calibration cache";
+        }
+        else
+        {
+            string referenceFrameCache = cacheDir + "/frameBoardEmpty.png";
+            string homographyReferenceFrameCache = cacheDir + "/homography.homo";
+            if (fileManager.physicalFileExist(referenceFrameCache) &&
+                fileManager.physicalFileExist(homographyReferenceFrameCache))
+            {
+                componentManager.currentBoard->frameBoardEmpty = imread(referenceFrameCache, IMREAD_COLOR);
+                MatHelper::LoadMatBinary(homographyReferenceFrameCache, componentManager.currentBoard->asset.homography);
+                return true;
+            }
+        }
     }
 
     Mat frame;
@@ -204,8 +222,22 @@ bool Engine::calibrateReferenceFrame()
         Log(typelog::INFO) << "Detector calibrateReferenceFrame failed";
     }
 
-    // imshow("frameBoardEmpty", componentManager.currentBoard->frameBoardEmpty);
-    // waitKey();
+    if (calibrationCache)
+    {
+        string cacheDir = fileManager.getCacheDir();
+        if (cacheDir.empty())
+        {
+            Log(typelog::WARN) << "can't use the debug calibration cache";
+        }
+        else
+        {
+            // save to cache
+            string referenceFrameCache = cacheDir + "/frameBoardEmpty.png";
+            string homographyReferenceFrameCache = cacheDir + "/homography.homo";
+            imwrite(referenceFrameCache, componentManager.currentBoard->frameBoardEmpty);
+            MatHelper::SaveMatBinary(homographyReferenceFrameCache, componentManager.currentBoard->asset.homography);
+        }
+    }
 
     return true;
 }
