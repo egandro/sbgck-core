@@ -32,9 +32,14 @@ void Engine::queryTokens(QueryTokenParam &param, QueryTokenResult &result)
         }
     }
 
-    std::vector<const Token *> tokens;
-    std::vector<string> ROIs;
-    std::vector<pair<std::string, std::string>> kvps;
+    DetectorTokenConfig cfg;
+
+    cfg.frame = &frame;
+    cfg.board = componentManager.currentBoard;
+
+    //cfg.showColorDiff;
+    //cfg.showAllROIs;
+    //cfg.showContours;
 
     for (size_t i = 0; i < param.names.size(); i++)
     {
@@ -45,28 +50,28 @@ void Engine::queryTokens(QueryTokenParam &param, QueryTokenResult &result)
         if(token == NULL) {
             Log(typelog::WARN) << "unknown token " << tokenName;
         } else {
-            tokens.push_back(token);
+            cfg.tokens.push_back(token);
         }
     }
 
     for (size_t i = 0; i < param.ROI.size(); i++)
     {
-        ROIs.push_back(param.ROI[i]);
+        cfg.ROIs.push_back(param.ROI[i]);
     }
 
-    if (!Detector::queryTokens(frame, *(componentManager.currentBoard), tokens, ROIs, kvps))
+    if (!Detector::queryTokens(cfg))
     {
         Log(typelog::INFO) << "Detector queryTokens failed";
         result.error = "can't query tokens";
         return;
     }
 
-    for (size_t i = 0; i < kvps.size(); i++)
+    for (size_t i = 0; i < cfg.result.size(); i++)
     {
         QueryTokenResultToken item;
 
-        item.ROI = kvps[i].first;
-        item.name = kvps[i].second;
+        item.ROI = cfg.result[i].first;
+        item.name = cfg.result[i].second;
 
         result.tokens.push_back(item);
     }

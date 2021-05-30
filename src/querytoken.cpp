@@ -12,7 +12,10 @@ void SBGCK::to_json(json &j, const QueryTokenParam &from)
     j = json{
         {"ROI", json::array()},
         {"timeout", from.timeout},
-        {"names", json::array()}};
+        {"names", json::array()},
+        {"showColorDiff", from.showColorDiff},
+        {"showAllROIs", from.showAllROIs},
+        {"showContours", from.showContours}};
 
     for (size_t i = 0; i < from.ROI.size(); i++)
     {
@@ -41,6 +44,22 @@ void SBGCK::from_json(const nlohmann::json &j, SBGCK::QueryTokenParam &to)
     {
         string roi = j["names"][i].get<std::string>();
         to.names.push_back(roi);
+    }
+
+    // optional
+    if (j.find("showColorDiff") != j.end())
+    {
+        j.at("showColorDiff").get_to(to.showColorDiff);
+    }
+    // optional
+    if (j.find("showAllROIs") != j.end())
+    {
+        j.at("showAllROIs").get_to(to.showAllROIs);
+    }
+    // optional
+    if (j.find("showContours") != j.end())
+    {
+        j.at("showContours").get_to(to.showContours);
     }
 }
 

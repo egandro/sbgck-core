@@ -15,8 +15,12 @@ namespace SBGCK
         vector<string> ROI;
         int timeout;
         vector<string> names;
+        bool showColorDiff;
+        bool showAllROIs;
+        bool showContours;
 
-        QueryTokenParam() : timeout(0)
+        QueryTokenParam()
+            : timeout(0), showColorDiff(false), showAllROIs(false), showContours(false)
         {
         }
 
@@ -33,6 +37,10 @@ namespace SBGCK
             {
                 names.push_back(value.names.at(i));
             }
+
+            showColorDiff = value.showColorDiff;
+            showAllROIs = value.showAllROIs;
+            showContours = value.showContours;
         }
     };
 
