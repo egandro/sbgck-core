@@ -237,6 +237,7 @@ bool Engine::calibrateReferenceFrame()
             string homographyReferenceFrameCache = cacheDir + "/homography.homo";
             imwrite(referenceFrameCache, componentManager.currentBoard->frameBoardEmpty);
             MatHelper::SaveMatBinary(homographyReferenceFrameCache, componentManager.currentBoard->asset.homography);
+            Log(typelog::INFO) << "Engine calibrateReferenceFrame created debug cache " << referenceFrameCache << " and " << homographyReferenceFrameCache;
         }
     }
 
