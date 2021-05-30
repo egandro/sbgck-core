@@ -36,10 +36,9 @@ void Engine::queryTokens(QueryTokenParam &param, QueryTokenResult &result)
 
     cfg.frame = &frame;
     cfg.board = componentManager.currentBoard;
-
-    //cfg.showColorDiff;
-    //cfg.showAllROIs;
-    //cfg.showContours;
+    cfg.showColorDiff = param.showColorDiff;
+    cfg.showAllROIs = param.showAllROIs;
+    cfg.showContours = param.showContours;
 
     for (size_t i = 0; i < param.names.size(); i++)
     {
