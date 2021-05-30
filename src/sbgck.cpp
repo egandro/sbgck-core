@@ -206,7 +206,7 @@ bool Engine::calibrateReferenceFrame()
             {
                 componentManager.currentBoard->frameBoardEmpty = imread(referenceFrameCache, IMREAD_COLOR);
                 MatHelper::LoadMatBinary(homographyReferenceFrameCache, componentManager.currentBoard->asset.homography);
-                Log(typelog::INFO) << "Engine calibrateReferenceFrame used cache from " << referenceFrameCache << " and " << homographyReferenceFrameCache;
+                Log(typelog::INFO) << "Engine calibrateReferenceFrame used debug cache from " << referenceFrameCache << " and " << homographyReferenceFrameCache;
                 return true;
             }
         }
