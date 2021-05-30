@@ -174,6 +174,15 @@ bool ComponentManager::loadFromComponentFile(FileManager &fm, string gameConfigJ
                     Log(typelog::ERR) << "ComponentManager loadFromComponentFile - token unknown geometry:" << tokenGeometry;
                     return false;
                 }
+
+                if(token.asset.getDefault().image.empty()) {
+                    if(token.tokenDetector == TokenDetector::None) {
+                        token.tokenDetector = TokenDetector::Geometry;
+                    }
+                    if(token.tokenDetector == TokenDetector::Color) {
+                        token.tokenDetector = TokenDetector::Color_And_Geometry;
+                    }
+                }
             }
 
             if (!(*it)["color"].empty())
@@ -202,6 +211,15 @@ bool ComponentManager::loadFromComponentFile(FileManager &fm, string gameConfigJ
 
                 // we need to convert this into BGR from RGB
                 token.color = Scalar(vect.at(2), vect.at(1), vect.at(0));
+
+                if(token.asset.getDefault().image.empty()) {
+                    if(token.tokenDetector == TokenDetector::None) {
+                        token.tokenDetector = TokenDetector::Color;
+                    }
+                    if(token.tokenDetector == TokenDetector::Geometry) {
+                        token.tokenDetector = TokenDetector::Color_And_Geometry;
+                    }
+                }
             }
 
             if (!(*it)["name"].empty())
@@ -219,6 +237,9 @@ bool ComponentManager::loadFromComponentFile(FileManager &fm, string gameConfigJ
                     Log(typelog::ERR) << "ComponentManager loadFromComponentFile - token asset loading failed";
                     return false;
                 }
+                token.tokenDetector = TokenDetector::Asset;
+            } else {
+                token.tokenDetector = TokenDetector::Geometry;
             }
 
             if (!readTokenData(token, (unsigned char *)data.content(), data.size()))
