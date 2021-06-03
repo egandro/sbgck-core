@@ -271,21 +271,21 @@ bool Engine::detectColorCalibrationCard()
         return false;
     }
 
-    Mat result;
+    // Mat result;
 
 
-    if (!Detector::detectRefereceImage(frame, reference, result, false))
-    {
-        Log(typelog::ERR) << "color card not detected";
-        return false;
-    }
+    // if (!Detector::detectRefereceImage(frame, reference, result, false))
+    // {
+    //     Log(typelog::ERR) << "color card not detected";
+    //     return false;
+    // }
 
-    imshow("frame", frame);
-    imshow("reference", reference.getDefault().image);
-    imshow("result", result);
-    waitKey();
+    // imshow("frame", frame);
+    // imshow("reference", reference.getDefault().image);
+    // imshow("result", result);
+    // waitKey();
 
-    return true;
+    return false;
 }
 
 string Engine::queryTokens(string jsonStr)
