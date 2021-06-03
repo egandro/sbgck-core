@@ -252,6 +252,39 @@ bool Engine::detectColorCalibrationCard()
     {
         Log(typelog::WARN) << " ... but I could use a cache :)";
     }
+
+    // HACK move to Component manager
+
+    VFSData data;
+    string fileName = string("assets/") + "color_checker.png";
+    if (!fileManager.readVFSData(fileName, data))
+    {
+        Log(typelog::ERR) << "Engine detectColorCalibrationCard - color_checker.png loading failed";
+        return false;
+    }
+    Asset reference((const unsigned char *)data.content(), data.size());
+    reference.assetDetector = AssetDetector::Feature2D;
+
+    Mat frame;
+    if (!cameraManager.getFrame(frame))
+    {
+        return false;
+    }
+
+    Mat result;
+
+
+    if (!Detector::detectRefereceImage(frame, reference, result, false))
+    {
+        Log(typelog::ERR) << "color card not detected";
+        return false;
+    }
+
+    imshow("frame", frame);
+    imshow("reference", reference.getDefault().image);
+    imshow("result", result);
+    waitKey();
+
     return true;
 }
 
