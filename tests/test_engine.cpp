@@ -147,7 +147,7 @@ void testEngineCalibrateReferenceFrame(string baseDir, string gameName, string c
   SBGCK_TEST_END();
 }
 
-void testEngineDetectColorCalibrationCard(string baseDir, string gameName, string camera, bool calibrationCache)
+void testEngineDetectColorCalibrationCard(string baseDir, string gameName, string camera, string cameraCalibrateFrame, bool calibrationCache)
 {
   SBGCK_TEST_BEGIN("testEngineDetectColorCalibrationCard");
 
@@ -155,12 +155,13 @@ void testEngineDetectColorCalibrationCard(string baseDir, string gameName, strin
 
   SBGCK_ASSERT_THROW(engine.init(baseDir, camera, calibrationCache) == true);
   SBGCK_ASSERT_THROW(engine.loadGame(gameName, "en") == true);
+  SBGCK_ASSERT_THROW(engine.setTestingCameraFrame(cameraCalibrateFrame) == true);
   SBGCK_ASSERT_THROW(engine.detectColorCalibrationCard() == true);
 
   SBGCK_TEST_END();
 }
 
-void testEngineQueryTokens(string baseDir, string gameName, string camera, string cameraFrame, std::map<string, string> queryTokenTests, bool calibrationCache)
+void testEngineQueryTokens(string baseDir, string gameName, string camera, string cameraCalibrateFrame, string cameraTestingFrame, std::map<string, string> queryTokenTests, bool calibrationCache)
 {
   SBGCK_TEST_BEGIN("testEngineQueryTokens");
 
@@ -169,8 +170,9 @@ void testEngineQueryTokens(string baseDir, string gameName, string camera, strin
   SBGCK_ASSERT_THROW(engine.init(baseDir, camera, calibrationCache) == true);
   SBGCK_ASSERT_THROW(engine.loadGame(gameName, "en") == true);
   SBGCK_ASSERT_THROW(engine.setBoard("Arctic") == true);
+  SBGCK_ASSERT_THROW(engine.setTestingCameraFrame(cameraCalibrateFrame) == true);
   SBGCK_ASSERT_THROW(engine.calibrateReferenceFrame() == true);
-  SBGCK_ASSERT_THROW(engine.setTestingCameraFrame(cameraFrame) == true);
+  SBGCK_ASSERT_THROW(engine.setTestingCameraFrame(cameraTestingFrame) == true);
 
   for (map<string, string>::const_iterator it = queryTokenTests.begin(); it != queryTokenTests.end(); it++)
   {
@@ -185,12 +187,13 @@ int main(int, char **)
   SBGCK_TEST_INIT();
 
   Engine::isAudioTesting = true;
-  Engine::isCameraTesting = false;
+  Engine::isCameraTesting = true;
 
   string baseDir = CMAKE_SOURCE_DIR + string("/tests/games");
   string gameName = "test_engine_no_camera";
-  string camera = baseDir + string("/test_engine_no_camera/boards/frame.png");
-  string frame_tokens = baseDir + string("/test_engine_no_camera/boards/frame_tokens.png");
+  string camera = baseDir + string("/test_engine_no_camera/frame.png");
+  string frame_tokens = baseDir + string("/test_engine_no_camera/frame_tokens.png");
+  string frame_color_checker = baseDir + string("/test_engine_no_camera/frame_color_checker.png");
 
   if (!Engine::isCameraTesting)
   {
@@ -250,6 +253,6 @@ int main(int, char **)
   // testEnginePlaySampleSyncTranslated(baseDir, gameName, camera);
   // testEngineStopAllAudio(baseDir, gameName, camera);
   // testEngineCalibrateReferenceFrame(baseDir, gameName, camera, calibrationCache);
-  testEngineDetectColorCalibrationCard(baseDir, gameName, camera, calibrationCache);
-  // testEngineQueryTokens(baseDir, gameName, camera, frame_tokens, queryTokenTests, calibrationCache);
+  testEngineDetectColorCalibrationCard(baseDir, gameName, camera, frame_color_checker, calibrationCache);
+  // testEngineQueryTokens(baseDir, gameName, camera, frame_color_checker, frame_tokens, queryTokenTests, calibrationCache);
 }

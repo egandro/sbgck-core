@@ -255,6 +255,12 @@ bool Engine::detectColorCalibrationCard()
 
     // HACK move to Component manager
 
+    Asset reference;
+    std::vector<std::vector<Scalar>> referenceColors;
+    ColorMap colorMap;
+    int border=20;
+
+/*
     VFSData data;
     string fileName = string("assets/") + "color_checker.png";
     if (!fileManager.readVFSData(fileName, data))
@@ -264,14 +270,19 @@ bool Engine::detectColorCalibrationCard()
     }
     Asset reference((const unsigned char *)data.content(), data.size());
     reference.assetDetector = AssetDetector::Feature2D;
-
+*/
     Mat frame;
+
     if (!cameraManager.getFrame(frame))
     {
         return false;
     }
 
-    // Mat result;
+    if (!Detector::calibrateColorMap(frame, reference, referenceColors, colorMap, border))
+    {
+        Log(typelog::ERR) << "color card not detected";
+        return false;
+    }
 
 
     // if (!Detector::detectRefereceImage(frame, reference, result, false))
