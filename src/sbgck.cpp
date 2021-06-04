@@ -274,7 +274,7 @@ bool Engine::detectColorCalibrationCard(bool showDebugFrame)
     }
 
     // we don't need this in ram any longer
-    componentManager.colorMap.reset();
+    componentManager.colorMapImage.release();
 
     if(showDebugFrame) {
         imshow("result", result);
