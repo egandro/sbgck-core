@@ -60,6 +60,8 @@ namespace SBGCK
         void mapTokenColors() {
             for (std::size_t i = 0; i < tokens.size(); ++i)
             {
+                Log(typelog::INFO) << "Mapping Token [" << i << "] from color: " << tokens[i].color << " to color: " << colorMap.getMappedColor(tokens[i].color);
+
                 tokens[i].color = colorMap.getMappedColor(tokens[i].color);
             }
         }
