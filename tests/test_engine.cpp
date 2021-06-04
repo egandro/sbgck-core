@@ -152,11 +152,12 @@ void testEngineDetectColorCalibrationCard(string baseDir, string gameName, strin
   SBGCK_TEST_BEGIN("testEngineDetectColorCalibrationCard");
 
   Engine engine;
+  bool showDebugFrame = false;
 
   SBGCK_ASSERT_THROW(engine.init(baseDir, camera, calibrationCache) == true);
   SBGCK_ASSERT_THROW(engine.loadGame(gameName, "en") == true);
   SBGCK_ASSERT_THROW(engine.setTestingCameraFrame(cameraCalibrateFrame) == true);
-  SBGCK_ASSERT_THROW(engine.detectColorCalibrationCard() == true);
+  SBGCK_ASSERT_THROW(engine.detectColorCalibrationCard(showDebugFrame) == true);
 
   SBGCK_TEST_END();
 }

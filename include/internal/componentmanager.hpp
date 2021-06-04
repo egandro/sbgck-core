@@ -6,6 +6,7 @@
 #include <sbgck_opencv/log.hpp>
 #include <sbgck_opencv/board.hpp>
 #include <sbgck_opencv/token.hpp>
+#include <sbgck_opencv/detector.hpp>
 
 #include "filemanager.hpp"
 
@@ -30,8 +31,13 @@ namespace SBGCK
         vector<Token> tokens;
         Board *currentBoard;
 
+        ColorMap colorMap;
+        Mat colorMapImage;
+        std::vector<std::vector<Scalar>> colorMapReferenceColors;
+        int colorMapBorder;
+
         ComponentManager()
-            : currentBoard(NULL) {}
+            : currentBoard(NULL), colorMapBorder(0) {}
 
         ~ComponentManager() {}
 
@@ -49,6 +55,13 @@ namespace SBGCK
                 }
             }
             return NULL;
+        }
+
+        void mapTokenColors() {
+            for (std::size_t i = 0; i < tokens.size(); ++i)
+            {
+                tokens[i].color = colorMap.getMappedColor(tokens[i].color);
+            }
         }
     };
 }

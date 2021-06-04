@@ -244,59 +244,45 @@ bool Engine::calibrateReferenceFrame()
     return true;
 }
 
-bool Engine::detectColorCalibrationCard()
+bool Engine::detectColorCalibrationCard(bool showDebugFrame)
 {
-    Log(typelog::INFO) << "Engine calibrateReferenceFrame";
-    Log(typelog::WARN) << " detectColorCalibrationCard NOT IMPLEMENTED";
+    Log(typelog::INFO) << "Engine calibrateReferenceFrame "  << showDebugFrame;
+
     if (calibrationCache)
     {
         Log(typelog::WARN) << " ... but I could use a cache :)";
     }
 
-    // HACK move to Component manager
-
-    Asset reference;
-    std::vector<std::vector<Scalar>> referenceColors;
-    ColorMap colorMap;
-    int border=20;
-
-/*
-    VFSData data;
-    string fileName = string("assets/") + "color_checker.png";
-    if (!fileManager.readVFSData(fileName, data))
-    {
-        Log(typelog::ERR) << "Engine detectColorCalibrationCard - color_checker.png loading failed";
-        return false;
-    }
-    Asset reference((const unsigned char *)data.content(), data.size());
+    Asset reference(componentManager.colorMapImage);
     reference.assetDetector = AssetDetector::Feature2D;
-*/
-    Mat frame;
 
+    Mat frame;
     if (!cameraManager.getFrame(frame))
     {
         return false;
     }
 
-    if (!Detector::calibrateColorMap(frame, reference, referenceColors, colorMap, border))
+    Mat result;
+    if (!Detector::calibrateColorMap(frame, reference, result,
+        componentManager.colorMapReferenceColors,
+        componentManager.colorMap,
+        componentManager.colorMapBorder))
     {
         Log(typelog::ERR) << "color card not detected";
         return false;
     }
 
+    // we don't need this in ram any longer
+    componentManager.colorMap.reset();
 
-    // if (!Detector::detectRefereceImage(frame, reference, result, false))
-    // {
-    //     Log(typelog::ERR) << "color card not detected";
-    //     return false;
-    // }
+    if(showDebugFrame) {
+        imshow("result", result);
+        waitKey();
+    }
 
-    // imshow("frame", frame);
-    // imshow("reference", reference.getDefault().image);
-    // imshow("result", result);
-    // waitKey();
+    componentManager.mapTokenColors();
 
-    return false;
+    return true;
 }
 
 string Engine::queryTokens(string jsonStr)

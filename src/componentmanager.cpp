@@ -11,6 +11,10 @@ void ComponentManager::reset()
 
     gameName = "";
     currentBoard = NULL;
+    colorMap.reset();
+    colorMapImage.release();
+    colorMapReferenceColors.clear();
+    colorMapBorder = 0;
 }
 
 bool ComponentManager::readBoardData(const unsigned char *imageData,
@@ -175,11 +179,14 @@ bool ComponentManager::loadFromComponentFile(FileManager &fm, string gameConfigJ
                     return false;
                 }
 
-                if(token.asset.getDefault().image.empty()) {
-                    if(token.tokenDetector == TokenDetector::None) {
+                if (token.asset.getDefault().image.empty())
+                {
+                    if (token.tokenDetector == TokenDetector::None)
+                    {
                         token.tokenDetector = TokenDetector::Geometry;
                     }
-                    if(token.tokenDetector == TokenDetector::Color) {
+                    if (token.tokenDetector == TokenDetector::Color)
+                    {
                         token.tokenDetector = TokenDetector::Color_And_Geometry;
                     }
                 }
@@ -212,11 +219,14 @@ bool ComponentManager::loadFromComponentFile(FileManager &fm, string gameConfigJ
                 // we need to convert this into BGR from RGB
                 token.color = Scalar(vect.at(2), vect.at(1), vect.at(0));
 
-                if(token.asset.getDefault().image.empty()) {
-                    if(token.tokenDetector == TokenDetector::None) {
+                if (token.asset.getDefault().image.empty())
+                {
+                    if (token.tokenDetector == TokenDetector::None)
+                    {
                         token.tokenDetector = TokenDetector::Color;
                     }
-                    if(token.tokenDetector == TokenDetector::Geometry) {
+                    if (token.tokenDetector == TokenDetector::Geometry)
+                    {
                         token.tokenDetector = TokenDetector::Color_And_Geometry;
                     }
                 }
@@ -238,7 +248,9 @@ bool ComponentManager::loadFromComponentFile(FileManager &fm, string gameConfigJ
                     return false;
                 }
                 token.tokenDetector = TokenDetector::Asset;
-            } else {
+            }
+            else
+            {
                 token.tokenDetector = TokenDetector::Geometry;
             }
 
@@ -251,6 +263,81 @@ bool ComponentManager::loadFromComponentFile(FileManager &fm, string gameConfigJ
             tokens.push_back(token);
         }
     }
+
+    if (!j["color_checker"].empty())
+    {
+        string asset;
+        if (!j["color_checker"]["asset"].empty())
+        {
+            asset = j["color_checker"]["asset"].get<std::string>();
+        }
+
+        if (asset.empty())
+        {
+            Log(typelog::ERR) << "ComponentManager loadFromComponentFile - color_checker with empty asset ";
+            return false;
+        }
+
+        VFSData data;
+        string fileName = string("assets/") + asset;
+        if (!fm.readVFSData(fileName, data))
+        {
+            Log(typelog::ERR) << "ComponentManager loadFromComponentFile - color_checker asset loading failed";
+            return false;
+        }
+
+        const unsigned char *ptr = (const unsigned char *)data.content();
+        vector<unsigned char> inputImageBytes(ptr, ptr + data.size());
+        colorMapImage = imdecode(inputImageBytes, IMREAD_COLOR);
+
+        if (!j["color_checker"]["border"].empty())
+        {
+            colorMapBorder = j["color_checker"]["border"].get<int>();
+        }
+
+        if (!j["color_checker"]["colors"].empty())
+        {
+            int y = 0;
+            for (nlohmann::json::iterator it_y = j["color_checker"]["colors"].begin();
+                 it_y != j["color_checker"]["colors"].end(); ++it_y)
+            {
+                colorMapReferenceColors.push_back({});
+                int x = 0;
+                for (nlohmann::json::iterator it = (*it_y).begin();
+                     it != (*it_y).end(); ++it)
+                {
+                    string color = (*it).get<std::string>();
+
+                    // strip whitespace
+                    std::regex r("\\s+");
+                    color = std::regex_replace(color, r, "");
+
+                    std::vector<int> vect;
+                    std::stringstream ss(color);
+
+                    for (int i; ss >> i;)
+                    {
+                        vect.push_back(i);
+                        if (ss.peek() == ',')
+                            ss.ignore();
+                    }
+
+                    if (vect.size() != 3)
+                    {
+                        Log(typelog::ERR) << "ComponentManager loadFromComponentFile - color_checker has invalid color: " << color;
+                        return false;
+                    }
+
+                    // we need to convert this into BGR from RGB
+                    Scalar col = Scalar(vect.at(2), vect.at(1), vect.at(0));
+                    colorMapReferenceColors[y].push_back(col);
+                    x++;
+                }
+                y++;
+            }
+        }
+    }
+
     return true;
 }
 
@@ -265,7 +352,8 @@ bool ComponentManager::setBoard(string boardName, bool resetEmptyFrame)
         if (board->name == boardName)
         {
             currentBoard = board;
-            if(resetEmptyFrame) {
+            if (resetEmptyFrame)
+            {
                 currentBoard->frameBoardEmpty = Mat();
             }
             return true;

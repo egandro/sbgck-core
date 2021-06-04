@@ -53,7 +53,7 @@ namespace SBGCK
         bool playSampleSync(string sampleName, bool isLocalized);
         bool stopAllAudio();
         bool calibrateReferenceFrame();
-        bool detectColorCalibrationCard();
+        bool detectColorCalibrationCard(bool showDebugFrame=false);
         string queryTokens(string jsonStr);
     };
 }
