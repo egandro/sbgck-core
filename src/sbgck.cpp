@@ -218,7 +218,8 @@ bool Engine::calibrateReferenceFrame()
         return false;
     }
 
-    if (!Detector::calibrateReferenceFrame(frame, *(componentManager.currentBoard)))
+    const double histogramCorrelationMin = 0.60;
+    if (!Detector::calibrateReferenceFrame(frame, *(componentManager.currentBoard), histogramCorrelationMin))
     {
         Log(typelog::INFO) << "Detector calibrateReferenceFrame failed";
     }
