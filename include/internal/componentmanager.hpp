@@ -45,7 +45,8 @@ namespace SBGCK
 
         bool setBoard(string boardName, bool resetEmptyFrame);
 
-        Token* getToken(string tokenName) {
+        Token *getToken(string tokenName)
+        {
             for (std::size_t i = 0; i < tokens.size(); ++i)
             {
                 Token *token = &(tokens[i]);
@@ -57,12 +58,15 @@ namespace SBGCK
             return NULL;
         }
 
-        void mapTokenColors() {
-            for (std::size_t i = 0; i < tokens.size(); ++i)
+        void mapTokenColors()
+        {
+            int i = 0;
+            for (vector<Token>::iterator it = tokens.begin(); it != tokens.end(); it++)
             {
-                Log(typelog::INFO) << "Mapping Token [" << i << "] from color: " << tokens[i].color << " to color: " << colorMap.getMappedColor(tokens[i].color);
+                Log(typelog::INFO) << "Mapping Token [" << i << "] from color: " << it->color << " to color: " << colorMap.getMappedColor(it->color);
 
-                tokens[i].color = colorMap.getMappedColor(tokens[i].color);
+                it->color = colorMap.getMappedColor(it->color);
+                i++;
             }
         }
     };
